@@ -28,35 +28,35 @@
                 </property>
                 <widget class="QWidget" name="tab_config">
                     <attribute name="title">
-                        <string>Config</string>
+                        <string>Communicate</string>
                     </attribute>
                 </widget>
                 <widget class="QWidget" name="tab_command">
                     <attribute name="title">
-                        <string>Command</string>
+                        <string>Control</string>
                     </attribute>
                     <widget class="QComboBox" name="comboBox_controlMode">
                         <property name="geometry">
                             <rect>
                                 <x>10</x>
-                                <y>70</y>
+                                <y>110</y>
                                 <width>111</width>
                                 <height>24</height>
                             </rect>
                         </property>
                         <item>
                             <property name="text">
-                                <string>Position</string>
+                                <string>POSITION</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>Velocity</string>
+                                <string>VELOCITY</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>Current</string>
+                                <string>CURRENT</string>
                             </property>
                         </item>
                         <item>
@@ -64,9 +64,34 @@
                                 <string>PD</string>
                             </property>
                         </item>
+                    </widget>
+                    <widget class="QComboBox" name="comboBox_ipList">
+                        <property name="geometry">
+                            <rect>
+                                <x>10</x>
+                                <y>70</y>
+                                <width>111</width>
+                                <height>23</height>
+                            </rect>
+                        </property>
+                    </widget>
+                    <widget class="QComboBox" name="comboBox_functionMode">
+                        <property name="geometry">
+                            <rect>
+                                <x>10</x>
+                                <y>150</y>
+                                <width>111</width>
+                                <height>23</height>
+                            </rect>
+                        </property>
                         <item>
                             <property name="text">
-                                <string>BandWith</string>
+                                <string>SineWave</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>BandWidth</string>
                             </property>
                         </item>
                     </widget>
@@ -79,7 +104,7 @@
                     <x>0</x>
                     <y>0</y>
                     <width>800</width>
-                    <height>21</height>
+                    <height>20</height>
                 </rect>
             </property>
         </widget>

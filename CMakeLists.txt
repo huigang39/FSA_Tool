@@ -10,14 +10,18 @@ set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_CURRENT_SOURCE_DIR}/ui)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Network)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Network)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/fsa-cpp-sdk/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/fsa-cpp-sdk/ThirdParty)
 
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 file(GLOB_RECURSE HEADERS "inc/*.h")
 file(GLOB_RECURSE UI "ui/*.ui")
+
+add_subdirectory(fsa-cpp-sdk)
 
 set(PROJECT_SOURCES
     ${SOURCES}
@@ -48,7 +52,8 @@ else()
     endif()
 endif()
 
-target_link_libraries(motor_tool PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(motor_tool PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network)
+target_link_libraries(motor_tool PRIVATE ${PROJECT_SOURCE_DIR}/lib/libfsasdk.so)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
@@ -73,4 +78,18 @@ install(TARGETS motor_tool
 
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(motor_tool)
+endif()
+
+# Find clang-format
+find_program(CLANG_FORMAT "clang-format")
+if(CLANG_FORMAT)
+    # Get all project files
+    file(GLOB_RECURSE ALL_SOURCE_FILES *.cpp *.h)
+
+    # Add custom target to format all source files
+    add_custom_target(clangformat
+        COMMAND ${CLANG_FORMAT}
+        -i
+        ${ALL_SOURCE_FILES}
+    )
 endif()
