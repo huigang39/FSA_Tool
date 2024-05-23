@@ -35,6 +35,9 @@ void FSA_Tool::init() {
     connect( &getPvcTimer, &QTimer::timeout, [ & ]() {
         for ( auto& fsa : fsaMap ) {
             fsa.GetPVC( control.pvcNow.at( Control::ControlMode::POSITION ), control.pvcNow.at( Control::ControlMode::VELOCITY ), control.pvcNow.at( Control::ControlMode::CURRENT ) );
+            ui.lcdNumber_position->display( control.pvcNow.at( Control::ControlMode::POSITION ) );
+            ui.lcdNumber_velocity->display( control.pvcNow.at( Control::ControlMode::VELOCITY ) );
+            ui.lcdNumber_current->display( control.pvcNow.at( Control::ControlMode::CURRENT ) );
         }
     } );
 
