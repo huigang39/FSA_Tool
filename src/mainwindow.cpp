@@ -16,7 +16,16 @@ FSA_Tool::~FSA_Tool() = default;
 void FSA_Tool::init() {
     static QMap< QString, FSA_CONNECT::FSA > lastFsaMap = fsaMap;
     connect( &timer, &QTimer::timeout, [ & ]() {
-        control.broadcast( "Is any fourier smart server here?", QHostAddress( "192.168.137.255" ), 2333, fsaMap );
+        control.broadcast( "Is any fourier smart server here?", QHostAddress( "192.168.137.255" ), 2334, fsaMap );
+
+        for ( auto& ip : fsaMap.keys() ) {
+            std::cout << "IP: " << ip.toStdString() << std::endl;
+        }
+
+        for ( auto& ip : lastFsaMap.keys() ) {
+            std::cout << "lastIP: " << ip.toStdString() << std::endl;
+        }
+
         if ( lastFsaMap.keys() != fsaMap.keys() ) {
             lastFsaMap = fsaMap;
             updateUI();

@@ -12,16 +12,22 @@ void Control::broadcast( const QString& message, const QHostAddress& address, co
 
     // UDP 广播
     udpSocket.writeDatagram( datagram, address, port );
-    // 如果接收到回复，将回复者的IP地址添加到列表中
-    if ( udpSocket.waitForReadyRead( 100 ) && udpSocket.hasPendingDatagrams() ) {
+
+    // 如果接收到回复，将回复者的 IPv4 地址添加到 Map 中
+    if ( udpSocket.waitForReadyRead( 500 ) && udpSocket.hasPendingDatagrams() ) {
         datagram.resize( udpSocket.pendingDatagramSize() );
         QHostAddress senderIP;
         quint16      senderPort;
+        QString      key;
 
         udpSocket.readDatagram( datagram.data(), datagram.size(), &senderIP, &senderPort );
 
-        fsaMap.insert( senderIP.toString(), FSA_CONNECT::FSA() );
-        fsaMap.find( senderIP.toString() )->init( senderIP.toString().toStdString() );
+        key = senderIP.toString().remove( "::ffff:" );
+
+        if ( !fsaMap.contains( key ) ) {
+            fsaMap.insert( key, FSA_CONNECT::FSA() );
+            fsaMap.find( key )->init( key.toStdString() );
+        }
     }
 }
 
