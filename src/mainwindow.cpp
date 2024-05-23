@@ -15,7 +15,7 @@ FSA_Tool::~FSA_Tool() = default;
 
 void FSA_Tool::init() {
     static QMap< QString, FSA_CONNECT::FSA > lastFsaMap = fsaMap;
-    connect( &timer, &QTimer::timeout, [ & ]() {
+    connect( &boardcastTimer, &QTimer::timeout, [ & ]() {
         control.broadcast( "Is any fourier smart server here?", QHostAddress( "192.168.137.255" ), 2334, fsaMap );
 
         for ( auto& ip : fsaMap.keys() ) {
@@ -31,7 +31,15 @@ void FSA_Tool::init() {
             updateUI();
         }
     } );
-    timer.start( 3000 );
+
+    connect( &getPvcTimer, &QTimer::timeout, [ & ]() {
+        for ( auto& fsa : fsaMap ) {
+            fsa.GetPVC( control.pvcNow.at( Control::ControlMode::POSITION ), control.pvcNow.at( Control::ControlMode::VELOCITY ), control.pvcNow.at( Control::ControlMode::CURRENT ) );
+        }
+    } );
+
+    boardcastTimer.start( 3000 );
+    getPvcTimer.start( 500 );
 }
 
 void FSA_Tool::setupUI() {

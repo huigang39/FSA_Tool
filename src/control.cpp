@@ -14,7 +14,7 @@ void Control::broadcast( const QString& message, const QHostAddress& address, co
     udpSocket.writeDatagram( datagram, address, port );
 
     // 如果接收到回复，将回复者的 IPv4 地址添加到 Map 中
-    if ( udpSocket.waitForReadyRead( 500 ) && udpSocket.hasPendingDatagrams() ) {
+    if ( udpSocket.waitForReadyRead( 100 ) && udpSocket.hasPendingDatagrams() ) {
         datagram.resize( udpSocket.pendingDatagramSize() );
         QHostAddress senderIP;
         quint16      senderPort;
@@ -37,17 +37,23 @@ int Control::enableFSA( FSA_CONNECT::FSA& fsa ) {
 }
 
 int Control::setControlMode( const ControlMode& controlMode, FSA_CONNECT::FSA& fsa ) {
+    fsa.GetPVC( pvcNow.at( ControlMode::POSITION ), pvcNow.at( ControlMode::VELOCITY ), pvcNow.at( ControlMode::CURRENT ) );
+
     switch ( controlMode ) {
     case ControlMode::POSITION:
+        fsa.SetPosition( pvcNow.at( controlMode ), 0.0, 0.0 );
         fsa.EnablePosControl();
         break;
     case ControlMode::VELOCITY:
+        fsa.SetVelocity( pvcNow.at( controlMode ), 0.0 );
         fsa.EnableVelControl();
         break;
     case ControlMode::CURRENT:
+        fsa.SetCurrent( pvcNow.at( controlMode ) );
         fsa.EnableCurControl();
         break;
     case ControlMode::PD:
+        fsa.SetPosition( pvcNow.at( ControlMode::POSITION ), 0.0, 0.0 );
         fsa.EnablePDControl();
         break;
     default:

@@ -59,6 +59,12 @@ public:
         },
     };
 
+    std::map< ControlMode, double > pvcNow = {
+        { ControlMode::POSITION, 0.0 },
+        { ControlMode::VELOCITY, 0.0 },
+        { ControlMode::CURRENT, 0.0 },
+    };
+
     void broadcast( const QString& message, const QHostAddress& address, const quint16 port, QMap< QString, FSA_CONNECT::FSA >& fsaMap );
     int  enableFSA( FSA_CONNECT::FSA& fsa );
     int  setControlMode( const ControlMode& controlMode, FSA_CONNECT::FSA& fsa );

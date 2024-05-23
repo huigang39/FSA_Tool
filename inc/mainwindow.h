@@ -25,7 +25,8 @@ public:
     ~FSA_Tool();
 
     Ui::FSA_Tool  ui;
-    QTimer        timer;
+    QTimer        boardcastTimer;
+    QTimer        getPvcTimer;
     Control       control;
     DataGenerater dataGenerater;
 
