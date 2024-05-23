@@ -3,7 +3,9 @@
 #include "control.h"
 #include "dataGenerater.h"
 #include <iostream>
+#include <qtimer.h>
 #include <string>
+#include <sys/socket.h>
 #include <vector>
 
 FSA_Tool::FSA_Tool( QWidget* parent ) : QMainWindow( parent ) {
@@ -41,8 +43,11 @@ void FSA_Tool::init() {
         }
     } );
 
-    boardcastTimer.start( 3000 );
-    getPvcTimer.start( 500 );
+    boardcastTimer.moveToThread( &uiUpdateThread );
+    getPvcTimer.moveToThread( &uiUpdateThread );
+
+    connect( &uiUpdateThread, &QThread::started, [ & ]() { boardcastTimer.start( 3000 ); } );
+    connect( &uiUpdateThread, &QThread::started, [ & ]() { getPvcTimer.start( 500 ); } );
 }
 
 void FSA_Tool::setupUI() {
@@ -96,7 +101,7 @@ void FSA_Tool::on_pushButton_setControlMode_clicked() {
 }
 
 void FSA_Tool::on_pushButton_setFunctionMode_clicked() {
-    test();
+    // test();
     if ( !ui.comboBox_fsaList->currentText().isEmpty() ) {
         setControlDataVariable( dataGenerater.controlDataVariable );
 

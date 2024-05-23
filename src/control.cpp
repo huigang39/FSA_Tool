@@ -67,24 +67,29 @@ void Control::sendControlData( const ControlMode& controlMode, ControlData_t& co
     std::vector< double > pos;
     std::vector< double > vel;
     std::vector< double > cur;
+    int                   size;
 
     switch ( controlMode ) {
     case ControlMode::POSITION:
-        pos = controlData.at( ControlMode::POSITION ).at( "POSITION" );
-        vel = controlData.at( ControlMode::POSITION ).at( "VELOCITY" );
-        cur = controlData.at( ControlMode::POSITION ).at( "CURRENT" );
+        pos  = controlData.at( ControlMode::POSITION ).at( "POSITION" );
+        vel  = controlData.at( ControlMode::POSITION ).at( "VELOCITY" );
+        cur  = controlData.at( ControlMode::POSITION ).at( "CURRENT" );
+        size = pos.size();
         break;
     case ControlMode::VELOCITY:
-        vel = controlData.at( ControlMode::VELOCITY ).at( "VELOCITY" );
-        cur = controlData.at( ControlMode::VELOCITY ).at( "CURRENT" );
+        vel  = controlData.at( ControlMode::VELOCITY ).at( "VELOCITY" );
+        cur  = controlData.at( ControlMode::VELOCITY ).at( "CURRENT" );
+        size = vel.size();
         break;
     case ControlMode::CURRENT:
-        cur = controlData.at( ControlMode::CURRENT ).at( "CURRENT" );
+        cur  = controlData.at( ControlMode::CURRENT ).at( "CURRENT" );
+        size = cur.size();
         break;
     case ControlMode::PD:
-        pos = controlData.at( ControlMode::PD ).at( "POSITION" );
-        vel = controlData.at( ControlMode::PD ).at( "VELOCITY" );
-        cur = controlData.at( ControlMode::PD ).at( "CURRENT" );
+        pos  = controlData.at( ControlMode::PD ).at( "POSITION" );
+        vel  = controlData.at( ControlMode::PD ).at( "VELOCITY" );
+        cur  = controlData.at( ControlMode::PD ).at( "CURRENT" );
+        size = pos.size();
         break;
     default:
         throw std::runtime_error( "Unknown Control Mode" );
@@ -94,7 +99,7 @@ void Control::sendControlData( const ControlMode& controlMode, ControlData_t& co
     struct timespec ts;
     struct timespec now;
 
-    for ( int i = 0; i < pos.size(); i++ ) {
+    for ( int i = 0; i < size; i++ ) {
 
         ts.tv_sec  = static_cast< time_t >( controlPeriod );
         ts.tv_nsec = static_cast< long long >( ( controlPeriod - ts.tv_sec ) * 1e9 );

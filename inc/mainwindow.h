@@ -5,9 +5,9 @@
 #include "dataGenerater.h"
 #include "ui_mainwindow.h"
 #include <QMainWindow>
+#include <QThread>
 #include <QTimer>
 #include <map>
-#include <qhostaddress.h>
 #include <string>
 #include <vector>
 
@@ -25,6 +25,7 @@ public:
     ~FSA_Tool();
 
     Ui::FSA_Tool  ui;
+    QThread       uiUpdateThread;
     QTimer        boardcastTimer;
     QTimer        getPvcTimer;
     Control       control;
