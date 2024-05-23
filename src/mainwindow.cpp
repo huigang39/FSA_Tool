@@ -48,6 +48,8 @@ void FSA_Tool::init() {
 
     connect( &uiUpdateThread, &QThread::started, [ & ]() { boardcastTimer.start( 3000 ); } );
     connect( &uiUpdateThread, &QThread::started, [ & ]() { getPvcTimer.start( 500 ); } );
+
+    uiUpdateThread.start();
 }
 
 void FSA_Tool::setupUI() {
