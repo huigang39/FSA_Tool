@@ -1,5 +1,6 @@
 #include "control.h"
 #include "Fsa.h"
+#include "FsaConfig.h"
 #include "mainwindow.h"
 #include <iostream>
 #include <qhostaddress.h>
@@ -33,6 +34,11 @@ void Control::broadcast( const QString& message, const QHostAddress& address, co
 
 int Control::enableFSA( FSA_CONNECT::FSA& fsa ) {
     fsa.Enable();
+    return 0;
+}
+
+int Control::setPidParamter( FSA_CONNECT::FSAConfig::FSAPIDParams& pidParameter, FSA_CONNECT::FSA& fsa ) {
+    fsa.SetPIDParams( pidParameter );
     return 0;
 }
 

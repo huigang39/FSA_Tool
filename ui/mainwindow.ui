@@ -361,6 +361,81 @@
                             <string>Current</string>
                         </property>
                     </widget>
+                    <widget class="QWidget" name="formLayoutWidget">
+                        <property name="geometry">
+                            <rect>
+                                <x>630</x>
+                                <y>300</y>
+                                <width>160</width>
+                                <height>151</height>
+                            </rect>
+                        </property>
+                        <layout class="QFormLayout" name="formLayout">
+                            <item row="0" column="0">
+                                <widget class="QLabel" name="label_position_Kp">
+                                    <property name="text">
+                                        <string>Position_Kp</string>
+                                    </property>
+                                </widget>
+                            </item>
+                            <item row="0" column="1">
+                                <widget class="QLineEdit" name="lineEdit_position_Kp" />
+                            </item>
+                            <item row="1" column="0">
+                                <widget class="QLabel" name="label_velocity_Kp">
+                                    <property name="text">
+                                        <string>Velocity_Kp</string>
+                                    </property>
+                                </widget>
+                            </item>
+                            <item row="1" column="1">
+                                <widget class="QLineEdit" name="lineEdit_velocity_Kp" />
+                            </item>
+                            <item row="2" column="0">
+                                <widget class="QLabel" name="label_velocity_Ki">
+                                    <property name="text">
+                                        <string>Velocity_Ki</string>
+                                    </property>
+                                </widget>
+                            </item>
+                            <item row="2" column="1">
+                                <widget class="QLineEdit" name="lineEdit_velocity_Ki" />
+                            </item>
+                            <item row="3" column="0">
+                                <widget class="QLabel" name="label_pd_Kp">
+                                    <property name="text">
+                                        <string>PD_Kp</string>
+                                    </property>
+                                </widget>
+                            </item>
+                            <item row="3" column="1">
+                                <widget class="QLineEdit" name="lineEdit_pd_Kp" />
+                            </item>
+                            <item row="4" column="0">
+                                <widget class="QLabel" name="label_pd_Kd">
+                                    <property name="text">
+                                        <string>PD_Ki</string>
+                                    </property>
+                                </widget>
+                            </item>
+                            <item row="4" column="1">
+                                <widget class="QLineEdit" name="lineEdit_pd_Kd" />
+                            </item>
+                        </layout>
+                    </widget>
+                    <widget class="QPushButton" name="pushButton_setPidParamter">
+                        <property name="geometry">
+                            <rect>
+                                <x>650</x>
+                                <y>460</y>
+                                <width>111</width>
+                                <height>23</height>
+                            </rect>
+                        </property>
+                        <property name="text">
+                            <string>Set PID Paramter</string>
+                        </property>
+                    </widget>
                 </widget>
             </widget>
         </widget>

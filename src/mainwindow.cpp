@@ -94,6 +94,14 @@ void FSA_Tool::on_pushButton_enableFSA_clicked() {
     }
 }
 
+void FSA_Tool::on_pushButton_setPidParamter_clicked() {
+    if ( !ui.comboBox_fsaList->currentText().isEmpty() ) {
+        setPidParamter( control.pidParameter );
+
+        control.setPidParamter( control.pidParameter, fsaMap.find( on_comboBox_fsaList_textActivated( ui.comboBox_fsaList->currentText() ) ).value() );
+    }
+}
+
 void FSA_Tool::on_pushButton_setControlMode_clicked() {
     if ( !ui.comboBox_fsaList->currentText().isEmpty() ) {
         control.setControlMode( controlMode, fsaMap.find( on_comboBox_fsaList_textActivated( ui.comboBox_fsaList->currentText() ) ).value() );
@@ -166,6 +174,14 @@ void FSA_Tool::setControlDataVariable( std::map< DataGenerater::ControlDataVaria
     controlDataVariable.at( DataGenerater::ControlDataVariable::Phase )          = ui.lineEdit_sinwWave_phase->text().toDouble();
     controlDataVariable.at( DataGenerater::ControlDataVariable::Duration )       = ui.lineEdit_sinwWave_duration->text().toDouble();
     controlDataVariable.at( DataGenerater::ControlDataVariable::SampleRate )     = ui.lineEdit_sinwWave_sampleRate->text().toDouble();
+}
+
+void FSA_Tool::setPidParamter( FSA_CONNECT::FSAConfig::FSAPIDParams& pidParameter ) {
+    pidParameter.control_position_kp = ui.lineEdit_position_Kp->text().toDouble();
+    pidParameter.control_velocity_kp = ui.lineEdit_velocity_Kp->text().toDouble();
+    pidParameter.control_velocity_ki = ui.lineEdit_velocity_Ki->text().toDouble();
+    pidParameter.control_pd_kp       = ui.lineEdit_pd_Kp->text().toDouble();
+    pidParameter.control_pd_kd       = ui.lineEdit_pd_Kd->text().toDouble();
 }
 
 void FSA_Tool::test() {

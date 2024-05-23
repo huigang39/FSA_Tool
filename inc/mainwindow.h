@@ -42,6 +42,7 @@ private:
     void updateUI();
 
     void setControlDataVariable( std::map< DataGenerater::ControlDataVariable, double >& controlDataVariable );
+    void setPidParamter( FSA_CONNECT::FSAConfig::FSAPIDParams& pidParameter );
 
     void test();
     void plotVector( const std::vector< double >& data );
@@ -54,5 +55,6 @@ private slots:
     void on_pushButton_enableFSA_clicked();
     void on_pushButton_setControlMode_clicked();
     void on_pushButton_setFunctionMode_clicked();
+    void on_pushButton_setPidParamter_clicked();
 };
 #endif  // MAINWINDOW_H

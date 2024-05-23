@@ -2,6 +2,7 @@
 #define COMMUNICATE_H
 
 #include "Fsa.h"
+#include "FsaConfig.h"
 #include <QHostAddress>
 #include <QString>
 #include <QUdpSocket>
@@ -65,8 +66,11 @@ public:
         { ControlMode::CURRENT, 0.0 },
     };
 
+    FSA_CONNECT::FSAConfig::FSAPIDParams pidParameter;
+
     void broadcast( const QString& message, const QHostAddress& address, const quint16 port, QMap< QString, FSA_CONNECT::FSA >& fsaMap );
     int  enableFSA( FSA_CONNECT::FSA& fsa );
+    int  setPidParamter( FSA_CONNECT::FSAConfig::FSAPIDParams& pidParameter, FSA_CONNECT::FSA& fsa );
     int  setControlMode( const ControlMode& controlMode, FSA_CONNECT::FSA& fsa );
     void sendControlData( const ControlMode& controlMode, ControlData_t& controlData, FSA_CONNECT::FSA& fsa, const float& controlPeriod );
 };
