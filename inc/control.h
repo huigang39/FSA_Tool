@@ -59,7 +59,7 @@ public:
         },
     };
 
-    void broadcast( const QString& message, const QHostAddress& address, const quint16 port, QMap< QString, FSA_CONNECT::FSA > fsaMap );
+    void broadcast( const QString& message, const QHostAddress& address, const quint16 port, QMap< QString, FSA_CONNECT::FSA >& fsaMap );
     int  enableFSA( FSA_CONNECT::FSA& fsa );
     int  setControlMode( const ControlMode& controlMode, FSA_CONNECT::FSA& fsa );
     void sendControlData( const ControlMode& controlMode, ControlData_t& controlData, FSA_CONNECT::FSA& fsa, const float& controlPeriod );

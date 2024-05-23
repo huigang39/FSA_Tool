@@ -6,7 +6,7 @@
 #include <qmap.h>
 #include <vector>
 
-void Control::broadcast( const QString& message, const QHostAddress& address, const quint16 port, QMap< QString, FSA_CONNECT::FSA > fsaMap ) {
+void Control::broadcast( const QString& message, const QHostAddress& address, const quint16 port, QMap< QString, FSA_CONNECT::FSA >& fsaMap ) {
     QUdpSocket udpSocket;
     QByteArray datagram = message.toUtf8();
 
