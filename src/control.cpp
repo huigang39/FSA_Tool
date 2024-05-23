@@ -1,6 +1,7 @@
 #include "control.h"
 #include "Fsa.h"
 #include "FsaConfig.h"
+#include "FsaStatus.h"
 #include "mainwindow.h"
 #include <iostream>
 #include <qhostaddress.h>
@@ -42,24 +43,25 @@ int Control::setPidParamter( FSA_CONNECT::FSAConfig::FSAPIDParams& pidParameter,
     return 0;
 }
 
-int Control::setControlMode( const ControlMode& controlMode, FSA_CONNECT::FSA& fsa ) {
-    fsa.GetPVC( pvcNow.at( ControlMode::POSITION ), pvcNow.at( ControlMode::VELOCITY ), pvcNow.at( ControlMode::CURRENT ) );
+int Control::setControlMode( const FSA_CONNECT::Status::FSAModeOfOperation& controlMode, FSA_CONNECT::FSA& fsa ) {
+    fsa.GetPVC( pvcNow.at( FSA_CONNECT::Status::FSAModeOfOperation::POSITION_CONTROL ), pvcNow.at( FSA_CONNECT::Status::FSAModeOfOperation::VELOCITY_CONTROL ),
+                pvcNow.at( FSA_CONNECT::Status::FSAModeOfOperation::CURRENT_CLOSE_LOOP_CONTROL ) );
 
     switch ( controlMode ) {
-    case ControlMode::POSITION:
+    case FSA_CONNECT::Status::FSAModeOfOperation::POSITION_CONTROL:
         fsa.SetPosition( pvcNow.at( controlMode ), 0.0, 0.0 );
         fsa.EnablePosControl();
         break;
-    case ControlMode::VELOCITY:
+    case FSA_CONNECT::Status::FSAModeOfOperation::VELOCITY_CONTROL:
         fsa.SetVelocity( pvcNow.at( controlMode ), 0.0 );
         fsa.EnableVelControl();
         break;
-    case ControlMode::CURRENT:
+    case FSA_CONNECT::Status::FSAModeOfOperation::CURRENT_CLOSE_LOOP_CONTROL:
         fsa.SetCurrent( pvcNow.at( controlMode ) );
         fsa.EnableCurControl();
         break;
-    case ControlMode::PD:
-        fsa.SetPosition( pvcNow.at( ControlMode::POSITION ), 0.0, 0.0 );
+    case FSA_CONNECT::Status::FSAModeOfOperation::PD_CONTROL:
+        fsa.SetPosition( pvcNow.at( FSA_CONNECT::Status::FSAModeOfOperation::POSITION_CONTROL ), 0.0, 0.0 );
         fsa.EnablePDControl();
         break;
     default:
@@ -69,32 +71,32 @@ int Control::setControlMode( const ControlMode& controlMode, FSA_CONNECT::FSA& f
     return 0;
 }
 
-void Control::sendControlData( const ControlMode& controlMode, ControlData_t& controlData, FSA_CONNECT::FSA& fsa, const float& controlPeriod ) {
+void Control::sendControlData( const FSA_CONNECT::Status::FSAModeOfOperation& controlMode, ControlData_t& controlData, FSA_CONNECT::FSA& fsa, const float& controlPeriod ) {
     std::vector< double > pos;
     std::vector< double > vel;
     std::vector< double > cur;
     int                   size;
 
     switch ( controlMode ) {
-    case ControlMode::POSITION:
-        pos  = controlData.at( ControlMode::POSITION ).at( "POSITION" );
-        vel  = controlData.at( ControlMode::POSITION ).at( "VELOCITY" );
-        cur  = controlData.at( ControlMode::POSITION ).at( "CURRENT" );
+    case FSA_CONNECT::Status::FSAModeOfOperation::POSITION_CONTROL:
+        pos  = controlData.at( controlMode ).at( "POSITION" );
+        vel  = controlData.at( controlMode ).at( "VELOCITY" );
+        cur  = controlData.at( controlMode ).at( "CURRENT" );
         size = pos.size();
         break;
-    case ControlMode::VELOCITY:
-        vel  = controlData.at( ControlMode::VELOCITY ).at( "VELOCITY" );
-        cur  = controlData.at( ControlMode::VELOCITY ).at( "CURRENT" );
+    case FSA_CONNECT::Status::FSAModeOfOperation::VELOCITY_CONTROL:
+        vel  = controlData.at( controlMode ).at( "VELOCITY" );
+        cur  = controlData.at( controlMode ).at( "CURRENT" );
         size = vel.size();
         break;
-    case ControlMode::CURRENT:
-        cur  = controlData.at( ControlMode::CURRENT ).at( "CURRENT" );
+    case FSA_CONNECT::Status::FSAModeOfOperation::CURRENT_CLOSE_LOOP_CONTROL:
+        cur  = controlData.at( controlMode ).at( "CURRENT" );
         size = cur.size();
         break;
-    case ControlMode::PD:
-        pos  = controlData.at( ControlMode::PD ).at( "POSITION" );
-        vel  = controlData.at( ControlMode::PD ).at( "VELOCITY" );
-        cur  = controlData.at( ControlMode::PD ).at( "CURRENT" );
+    case FSA_CONNECT::Status::FSAModeOfOperation::PD_CONTROL:
+        pos  = controlData.at( controlMode ).at( "POSITION" );
+        vel  = controlData.at( controlMode ).at( "VELOCITY" );
+        cur  = controlData.at( controlMode ).at( "CURRENT" );
         size = pos.size();
         break;
     default:
@@ -122,16 +124,16 @@ void Control::sendControlData( const ControlMode& controlMode, ControlData_t& co
 
         // 发送数据
         switch ( controlMode ) {
-        case ControlMode::POSITION:
+        case FSA_CONNECT::Status::FSAModeOfOperation::POSITION_CONTROL:
             fsa.SetPosition( pos.at( i ), vel.at( i ), cur.at( 1 ) );
             break;
-        case ControlMode::VELOCITY:
+        case FSA_CONNECT::Status::FSAModeOfOperation::VELOCITY_CONTROL:
             fsa.SetVelocity( vel.at( i ), cur.at( i ) );
             break;
-        case ControlMode::CURRENT:
+        case FSA_CONNECT::Status::FSAModeOfOperation::CURRENT_CLOSE_LOOP_CONTROL:
             fsa.SetCurrent( cur.at( i ) );
             break;
-        case ControlMode::PD:
+        case FSA_CONNECT::Status::FSAModeOfOperation::PD_CONTROL:
             fsa.SetPosition( pos.at( i ), vel.at( i ), cur.at( i ) );
             break;
         default:

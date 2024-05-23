@@ -36,10 +36,11 @@ void FSA_Tool::init() {
 
     connect( &getPvcTimer, &QTimer::timeout, [ & ]() {
         for ( auto& fsa : fsaMap ) {
-            fsa.GetPVC( control.pvcNow.at( Control::ControlMode::POSITION ), control.pvcNow.at( Control::ControlMode::VELOCITY ), control.pvcNow.at( Control::ControlMode::CURRENT ) );
-            ui.lcdNumber_position->display( control.pvcNow.at( Control::ControlMode::POSITION ) );
-            ui.lcdNumber_velocity->display( control.pvcNow.at( Control::ControlMode::VELOCITY ) );
-            ui.lcdNumber_current->display( control.pvcNow.at( Control::ControlMode::CURRENT ) );
+            fsa.GetPVC( control.pvcNow.at( FSA_CONNECT::Status::FSAModeOfOperation::POSITION_CONTROL ), control.pvcNow.at( FSA_CONNECT::Status::FSAModeOfOperation::VELOCITY_CONTROL ),
+                        control.pvcNow.at( FSA_CONNECT::Status::FSAModeOfOperation::CURRENT_CLOSE_LOOP_CONTROL ) );
+            ui.lcdNumber_position->display( control.pvcNow.at( FSA_CONNECT::Status::FSAModeOfOperation::POSITION_CONTROL ) );
+            ui.lcdNumber_velocity->display( control.pvcNow.at( FSA_CONNECT::Status::FSAModeOfOperation::VELOCITY_CONTROL ) );
+            ui.lcdNumber_current->display( control.pvcNow.at( FSA_CONNECT::Status::FSAModeOfOperation::CURRENT_CLOSE_LOOP_CONTROL ) );
         }
     } );
 
@@ -126,37 +127,37 @@ void FSA_Tool::on_pushButton_setFunctionMode_clicked() {
         std::vector< double > cur;
 
         switch ( controlMode ) {
-        case Control::ControlMode::POSITION:
+        case FSA_CONNECT::Status::FSAModeOfOperation::POSITION_CONTROL:
             pos = dataGenerater.generateControlData( functionMode, dataGenerater.controlDataVariable );
             vel = std::vector< double >( pos.size(), 0.0 );
             cur = std::vector< double >( pos.size(), 0.0 );
 
-            control.controlData.at( Control::ControlMode::POSITION ).at( "POSITION" ) = pos;
-            control.controlData.at( Control::ControlMode::POSITION ).at( "VELOCITY" ) = vel;
-            control.controlData.at( Control::ControlMode::POSITION ).at( "CURRENT" )  = cur;
+            control.controlData.at( controlMode ).at( "POSITION" ) = pos;
+            control.controlData.at( controlMode ).at( "VELOCITY" ) = vel;
+            control.controlData.at( controlMode ).at( "CURRENT" )  = cur;
 
             break;
-        case Control::ControlMode::VELOCITY:
+        case FSA_CONNECT::Status::FSAModeOfOperation::VELOCITY_CONTROL:
             vel = dataGenerater.generateControlData( functionMode, dataGenerater.controlDataVariable );
             cur = std::vector< double >( vel.size(), 0.0 );
 
-            control.controlData.at( Control::ControlMode::VELOCITY ).at( "VELOCITY" ) = vel;
-            control.controlData.at( Control::ControlMode::VELOCITY ).at( "CURRENT" )  = cur;
+            control.controlData.at( controlMode ).at( "VELOCITY" ) = vel;
+            control.controlData.at( controlMode ).at( "CURRENT" )  = cur;
 
             break;
-        case Control::ControlMode::CURRENT:
+        case FSA_CONNECT::Status::FSAModeOfOperation::CURRENT_CLOSE_LOOP_CONTROL:
             cur = dataGenerater.generateControlData( functionMode, dataGenerater.controlDataVariable );
 
-            control.controlData.at( Control::ControlMode::CURRENT ).at( "CURRENT" ) = cur;
+            control.controlData.at( controlMode ).at( "CURRENT" ) = cur;
             break;
-        case Control::ControlMode::PD:
+        case FSA_CONNECT::Status::FSAModeOfOperation::PD_CONTROL:
             pos = dataGenerater.generateControlData( functionMode, dataGenerater.controlDataVariable );
             vel = std::vector< double >( pos.size(), 0.0 );
             cur = std::vector< double >( pos.size(), 0.0 );
 
-            control.controlData.at( Control::ControlMode::PD ).at( "POSITION" ) = pos;
-            control.controlData.at( Control::ControlMode::PD ).at( "VELOCITY" ) = vel;
-            control.controlData.at( Control::ControlMode::PD ).at( "CURRENT" )  = cur;
+            control.controlData.at( controlMode ).at( "POSITION" ) = pos;
+            control.controlData.at( controlMode ).at( "VELOCITY" ) = vel;
+            control.controlData.at( controlMode ).at( "CURRENT" )  = cur;
 
             break;
         default:

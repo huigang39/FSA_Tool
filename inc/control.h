@@ -3,6 +3,7 @@
 
 #include "Fsa.h"
 #include "FsaConfig.h"
+#include "FsaStatus.h"
 #include <QHostAddress>
 #include <QString>
 #include <QUdpSocket>
@@ -15,20 +16,18 @@ public:
     Control()  = default;
     ~Control() = default;
 
-    enum class ControlMode { POSITION, VELOCITY, CURRENT, PD };
-
-    const std::map< const std::string, const ControlMode > controlModeMap{
-        { "POSITION", ControlMode::POSITION },
-        { "VELOCITY", ControlMode::VELOCITY },
-        { "CURRENT", ControlMode::CURRENT },
-        { "PD", ControlMode::PD },
+    const std::map< const std::string, const FSA_CONNECT::Status::FSAModeOfOperation > controlModeMap{
+        { "POSITION", FSA_CONNECT::Status::FSAModeOfOperation::POSITION_CONTROL },
+        { "VELOCITY", FSA_CONNECT::Status::FSAModeOfOperation::VELOCITY_CONTROL },
+        { "CURRENT", FSA_CONNECT::Status::FSAModeOfOperation::CURRENT_CLOSE_LOOP_CONTROL },
+        { "PD", FSA_CONNECT::Status::FSAModeOfOperation::PD_CONTROL },
     };
 
-    typedef std::map< Control::ControlMode, std::map< std::string, std::vector< double > > > ControlData_t;
+    typedef std::map< FSA_CONNECT::Status::FSAModeOfOperation, std::map< std::string, std::vector< double > > > ControlData_t;
 
     ControlData_t controlData{
         {
-            Control::ControlMode::POSITION,
+            FSA_CONNECT::Status::FSAModeOfOperation::POSITION_CONTROL,
             {
                 { "POSITION", { 0.0 } },
                 { "VELOCITY", { 0.0 } },
@@ -36,14 +35,14 @@ public:
             },
         },
         {
-            Control::ControlMode::VELOCITY,
+            FSA_CONNECT::Status::FSAModeOfOperation::VELOCITY_CONTROL,
             {
                 { "VELOCITY", { 0.0 } },
                 { "CURRENT", { 0.0 } },
             },
         },
         {
-            Control::ControlMode::CURRENT,
+            FSA_CONNECT::Status::FSAModeOfOperation::CURRENT_CLOSE_LOOP_CONTROL,
             {
 
                 { "CURRENT", { 0.0 } },
@@ -51,19 +50,19 @@ public:
             },
         },
         {
-            Control::ControlMode::PD,
+            FSA_CONNECT::Status::FSAModeOfOperation::PD_CONTROL,
             {
                 { "POSITION", { 0.0 } },
-                // { "VELOCITY", {} },
+                { "VELOCITY", { 0.0 } },
                 { "CURRENT", { 0.0 } },
             },
         },
     };
 
-    std::map< ControlMode, double > pvcNow = {
-        { ControlMode::POSITION, 0.0 },
-        { ControlMode::VELOCITY, 0.0 },
-        { ControlMode::CURRENT, 0.0 },
+    std::map< FSA_CONNECT::Status::FSAModeOfOperation, double > pvcNow = {
+        { FSA_CONNECT::Status::FSAModeOfOperation::POSITION_CONTROL, 0.0 },
+        { FSA_CONNECT::Status::FSAModeOfOperation::VELOCITY_CONTROL, 0.0 },
+        { FSA_CONNECT::Status::FSAModeOfOperation::CURRENT_CLOSE_LOOP_CONTROL, 0.0 },
     };
 
     FSA_CONNECT::FSAConfig::FSAPIDParams pidParameter;
@@ -71,8 +70,8 @@ public:
     void broadcast( const QString& message, const QHostAddress& address, const quint16 port, QMap< QString, FSA_CONNECT::FSA >& fsaMap );
     int  enableFSA( FSA_CONNECT::FSA& fsa );
     int  setPidParamter( FSA_CONNECT::FSAConfig::FSAPIDParams& pidParameter, FSA_CONNECT::FSA& fsa );
-    int  setControlMode( const ControlMode& controlMode, FSA_CONNECT::FSA& fsa );
-    void sendControlData( const ControlMode& controlMode, ControlData_t& controlData, FSA_CONNECT::FSA& fsa, const float& controlPeriod );
+    int  setControlMode( const FSA_CONNECT::Status::FSAModeOfOperation& controlMode, FSA_CONNECT::FSA& fsa );
+    void sendControlData( const FSA_CONNECT::Status::FSAModeOfOperation& controlMode, ControlData_t& controlData, FSA_CONNECT::FSA& fsa, const float& controlPeriod );
 };
 
 #endif  // COMMUNICATE_H

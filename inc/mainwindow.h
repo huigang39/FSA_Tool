@@ -33,8 +33,8 @@ public:
 
     QMap< QString, FSA_CONNECT::FSA > fsaMap;
 
-    Control::ControlMode        controlMode{ Control::ControlMode::POSITION };
-    DataGenerater::FunctionMode functionMode{ DataGenerater::FunctionMode::SineWave };
+    FSA_CONNECT::Status::FSAModeOfOperation controlMode{ FSA_CONNECT::Status::FSAModeOfOperation::POSITION_CONTROL };
+    DataGenerater::FunctionMode             functionMode{ DataGenerater::FunctionMode::SineWave };
 
 private:
     void setupUI();
