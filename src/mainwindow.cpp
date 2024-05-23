@@ -78,7 +78,7 @@ void FSA_Tool::on_pushButton_enableFSA_clicked() {
     }
 }
 
-void FSA_Tool::on_pushButton_setControllMode_clicked() {
+void FSA_Tool::on_pushButton_setControlMode_clicked() {
     if ( !ui.comboBox_fsaList->currentText().isEmpty() ) {
         control.setControlMode( controlMode, fsaMap.find( on_comboBox_fsaList_textActivated( ui.comboBox_fsaList->currentText() ) ).value() );
     }
@@ -95,18 +95,43 @@ void FSA_Tool::on_pushButton_setFunctionMode_clicked() {
             }
         }
 
+        std::vector< double > pos;
+        std::vector< double > vel;
+        std::vector< double > cur;
+
         switch ( controlMode ) {
         case Control::ControlMode::POSITION:
-            control.controlData.at( Control::ControlMode::POSITION ).at( "POSITION" ) = dataGenerater.generateControlData( functionMode, dataGenerater.controlDataVariable );
+            pos = dataGenerater.generateControlData( functionMode, dataGenerater.controlDataVariable );
+            vel = std::vector< double >( pos.size(), 0.0 );
+            cur = std::vector< double >( pos.size(), 0.0 );
+
+            control.controlData.at( Control::ControlMode::POSITION ).at( "POSITION" ) = pos;
+            control.controlData.at( Control::ControlMode::POSITION ).at( "VELOCITY" ) = vel;
+            control.controlData.at( Control::ControlMode::POSITION ).at( "CURRENT" )  = cur;
+
             break;
         case Control::ControlMode::VELOCITY:
-            control.controlData.at( Control::ControlMode::VELOCITY ).at( "VELOCITY" ) = dataGenerater.generateControlData( functionMode, dataGenerater.controlDataVariable );
+            vel = dataGenerater.generateControlData( functionMode, dataGenerater.controlDataVariable );
+            cur = std::vector< double >( vel.size(), 0.0 );
+
+            control.controlData.at( Control::ControlMode::VELOCITY ).at( "VELOCITY" ) = vel;
+            control.controlData.at( Control::ControlMode::VELOCITY ).at( "CURRENT" )  = cur;
+
             break;
         case Control::ControlMode::CURRENT:
-            control.controlData.at( Control::ControlMode::CURRENT ).at( "CURRENT" ) = dataGenerater.generateControlData( functionMode, dataGenerater.controlDataVariable );
+            cur = dataGenerater.generateControlData( functionMode, dataGenerater.controlDataVariable );
+
+            control.controlData.at( Control::ControlMode::CURRENT ).at( "CURRENT" ) = cur;
             break;
         case Control::ControlMode::PD:
-            control.controlData.at( Control::ControlMode::PD ).at( "POSITION" ) = dataGenerater.generateControlData( functionMode, dataGenerater.controlDataVariable );
+            pos = dataGenerater.generateControlData( functionMode, dataGenerater.controlDataVariable );
+            vel = std::vector< double >( pos.size(), 0.0 );
+            cur = std::vector< double >( pos.size(), 0.0 );
+
+            control.controlData.at( Control::ControlMode::PD ).at( "POSITION" ) = pos;
+            control.controlData.at( Control::ControlMode::PD ).at( "VELOCITY" ) = vel;
+            control.controlData.at( Control::ControlMode::PD ).at( "CURRENT" )  = cur;
+
             break;
         default:
             throw std::runtime_error( "Unknown Control Mode" );

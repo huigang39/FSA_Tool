@@ -50,7 +50,7 @@ private slots:
     void          on_comboBox_functionMode_textActivated( const QString& currentFunctionMode );
 
     void on_pushButton_enableFSA_clicked();
-    void on_pushButton_setControllMode_clicked();
+    void on_pushButton_setControlMode_clicked();
     void on_pushButton_setFunctionMode_clicked();
 };
 #endif  // MAINWINDOW_H
