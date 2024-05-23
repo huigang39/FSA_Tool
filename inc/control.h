@@ -1,9 +1,12 @@
-#ifndef CONTROL_H
-#define CONTROL_H
+#ifndef COMMUNICATE_H
+#define COMMUNICATE_H
 
+#include "Fsa.h"
+#include <QHostAddress>
 #include <QString>
-#include <cstdint>
-#include <map>
+#include <QUdpSocket>
+#include <qlist.h>
+#include <string>
 #include <vector>
 
 class Control {
@@ -11,14 +14,55 @@ public:
     Control()  = default;
     ~Control() = default;
 
-    enum class FunctionMode { SineWave, BandWidth };
-    const std::map< const std::string, const FunctionMode > functionModeMap = { { std::string( "SineWave" ), FunctionMode::SineWave }, { std::string( "BandWidth" ), FunctionMode::BandWidth } };
+    enum class ControlMode { POSITION, VELOCITY, CURRENT, PD };
 
-    std::vector< float > setControlData( const FunctionMode& functionMode );
+    const std::map< const std::string, const ControlMode > controlModeMap{
+        { "POSITION", ControlMode::POSITION },
+        { "VELOCITY", ControlMode::VELOCITY },
+        { "CURRENT", ControlMode::CURRENT },
+        { "PD", ControlMode::PD },
+    };
 
-private:
-    std::vector< float > generateSineWaveData( float amplitude, float frequency, float phase, float time, float sampleRate );
-    std::vector< float > generateSweepWaveData( float amplitude, float startFrequency, float endFrequency, float phase, float duration, float sampleRate );
+    typedef std::map< Control::ControlMode, std::map< std::string, std::vector< double > > > ControlData_t;
+
+    ControlData_t controlData{
+        {
+            Control::ControlMode::POSITION,
+            {
+                { "POSITION", { 0.0 } },
+                { "VELOCITY", { 0.0 } },
+                { "CURRENT", { 0.0 } },
+            },
+        },
+        {
+            Control::ControlMode::VELOCITY,
+            {
+                { "VELOCITY", { 0.0 } },
+                { "CURRENT", { 0.0 } },
+            },
+        },
+        {
+            Control::ControlMode::CURRENT,
+            {
+
+                { "CURRENT", { 0.0 } },
+
+            },
+        },
+        {
+            Control::ControlMode::PD,
+            {
+                { "POSITION", { 0.0 } },
+                // { "VELOCITY", {} },
+                { "CURRENT", { 0.0 } },
+            },
+        },
+    };
+
+    void broadcast( const QString& message, const QHostAddress& address, const quint16 port, QMap< QString, FSA_CONNECT::FSA > fsaMap );
+    int  enableFSA( FSA_CONNECT::FSA& fsa );
+    int  setControlMode( const ControlMode& controlMode, FSA_CONNECT::FSA& fsa );
+    void sendControlData( const ControlMode& controlMode, ControlData_t& controlData, FSA_CONNECT::FSA& fsa, const float& controlPeriod );
 };
 
-#endif  // CONTROL_H
+#endif  // COMMUNICATE_H

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
-    <class>MainWindow</class>
-    <widget class="QMainWindow" name="MainWindow">
+    <class>FSA_Tool</class>
+    <widget class="QMainWindow" name="FSA_Tool">
         <property name="geometry">
             <rect>
                 <x>0</x>
@@ -19,19 +19,19 @@
                     <rect>
                         <x>0</x>
                         <y>0</y>
-                        <width>621</width>
-                        <height>481</height>
+                        <width>800</width>
+                        <height>600</height>
                     </rect>
                 </property>
                 <property name="currentIndex">
                     <number>1</number>
                 </property>
-                <widget class="QWidget" name="tab_config">
+                <widget class="QWidget" name="tab_communicate">
                     <attribute name="title">
                         <string>Communicate</string>
                     </attribute>
                 </widget>
-                <widget class="QWidget" name="tab_command">
+                <widget class="QWidget" name="tab_control">
                     <attribute name="title">
                         <string>Control</string>
                     </attribute>
@@ -40,7 +40,7 @@
                             <rect>
                                 <x>10</x>
                                 <y>110</y>
-                                <width>111</width>
+                                <width>131</width>
                                 <height>24</height>
                             </rect>
                         </property>
@@ -65,12 +65,12 @@
                             </property>
                         </item>
                     </widget>
-                    <widget class="QComboBox" name="comboBox_ipList">
+                    <widget class="QComboBox" name="comboBox_fsaList">
                         <property name="geometry">
                             <rect>
                                 <x>10</x>
                                 <y>70</y>
-                                <width>111</width>
+                                <width>131</width>
                                 <height>23</height>
                             </rect>
                         </property>
@@ -80,7 +80,7 @@
                             <rect>
                                 <x>10</x>
                                 <y>150</y>
-                                <width>111</width>
+                                <width>131</width>
                                 <height>23</height>
                             </rect>
                         </property>
@@ -95,20 +95,206 @@
                             </property>
                         </item>
                     </widget>
+                    <widget class="QPushButton" name="pushButton_setControlMode">
+                        <property name="geometry">
+                            <rect>
+                                <x>160</x>
+                                <y>110</y>
+                                <width>111</width>
+                                <height>23</height>
+                            </rect>
+                        </property>
+                        <property name="text">
+                            <string>SetControlMode</string>
+                        </property>
+                    </widget>
+                    <widget class="QPushButton" name="pushButton_setFunctionMode">
+                        <property name="geometry">
+                            <rect>
+                                <x>160</x>
+                                <y>150</y>
+                                <width>111</width>
+                                <height>23</height>
+                            </rect>
+                        </property>
+                        <property name="text">
+                            <string>SetFunctionMode</string>
+                        </property>
+                    </widget>
+                    <widget class="QPushButton" name="pushButton_enableFSA">
+                        <property name="geometry">
+                            <rect>
+                                <x>160</x>
+                                <y>70</y>
+                                <width>111</width>
+                                <height>23</height>
+                            </rect>
+                        </property>
+                        <property name="text">
+                            <string>Enable</string>
+                        </property>
+                    </widget>
+                    <widget class="QStackedWidget" name="stackedWidget_configControlData">
+                        <property name="geometry">
+                            <rect>
+                                <x>20</x>
+                                <y>210</y>
+                                <width>251</width>
+                                <height>301</height>
+                            </rect>
+                        </property>
+                        <property name="currentIndex">
+                            <number>0</number>
+                        </property>
+                        <widget class="QWidget" name="page_sineWave">
+                            <widget class="QWidget" name="gridLayoutWidget_2">
+                                <property name="geometry">
+                                    <rect>
+                                        <x>20</x>
+                                        <y>50</y>
+                                        <width>201</width>
+                                        <height>188</height>
+                                    </rect>
+                                </property>
+                                <layout class="QGridLayout"
+                                    name="gridLayout_sinwWave_sineWave_functionLayout">
+                                    <item row="2" column="1">
+                                        <widget class="QLineEdit" name="lineEdit_sinwWave_phase" />
+                                    </item>
+                                    <item row="0" column="0">
+                                        <widget class="QLabel" name="label_sinwWave_amplitude">
+                                            <property name="text">
+                                                <string>Amplitude</string>
+                                            </property>
+                                        </widget>
+                                    </item>
+                                    <item row="0" column="1">
+                                        <widget class="QLineEdit" name="lineEdit_sinwWave_amplitude" />
+                                    </item>
+                                    <item row="3" column="1">
+                                        <widget class="QLineEdit" name="lineEdit_sinwWave_duration" />
+                                    </item>
+                                    <item row="4" column="1">
+                                        <widget class="QLineEdit"
+                                            name="lineEdit_sinwWave_sampleRate" />
+                                    </item>
+                                    <item row="1" column="1">
+                                        <widget class="QLineEdit" name="lineEdit_sinwWave_frequency" />
+                                    </item>
+                                    <item row="1" column="0">
+                                        <widget class="QLabel" name="label_sinwWave_frequency">
+                                            <property name="text">
+                                                <string>Frequency</string>
+                                            </property>
+                                        </widget>
+                                    </item>
+                                    <item row="2" column="0">
+                                        <widget class="QLabel" name="label_sinwWave_phase">
+                                            <property name="text">
+                                                <string>Phase</string>
+                                            </property>
+                                        </widget>
+                                    </item>
+                                    <item row="3" column="0">
+                                        <widget class="QLabel" name="label_sinwWave_duration">
+                                            <property name="text">
+                                                <string>Duration</string>
+                                            </property>
+                                        </widget>
+                                    </item>
+                                    <item row="4" column="0">
+                                        <widget class="QLabel" name="label_sinwWave_sampleRate">
+                                            <property name="text">
+                                                <string>SampleRate</string>
+                                            </property>
+                                        </widget>
+                                    </item>
+                                </layout>
+                            </widget>
+                        </widget>
+                        <widget class="QWidget" name="page_sweepWave">
+                            <widget class="QWidget" name="gridLayoutWidget">
+                                <property name="geometry">
+                                    <rect>
+                                        <x>20</x>
+                                        <y>40</y>
+                                        <width>201</width>
+                                        <height>188</height>
+                                    </rect>
+                                </property>
+                                <layout class="QGridLayout"
+                                    name="gridLayout_sweepWave_functionLayout">
+                                    <item row="4" column="1">
+                                        <widget class="QLineEdit" name="lineEdit_sweepWave_duration" />
+                                    </item>
+                                    <item row="4" column="0">
+                                        <widget class="QLabel" name="label_sweepWave_duration">
+                                            <property name="text">
+                                                <string>Duration</string>
+                                            </property>
+                                        </widget>
+                                    </item>
+                                    <item row="1" column="0">
+                                        <widget class="QLabel" name="label_sweepWave_startFrequency">
+                                            <property name="text">
+                                                <string>StartFrequency</string>
+                                            </property>
+                                        </widget>
+                                    </item>
+                                    <item row="0" column="0">
+                                        <widget class="QLabel" name="label_sweepWave_amplitude">
+                                            <property name="text">
+                                                <string>Amplitude</string>
+                                            </property>
+                                        </widget>
+                                    </item>
+                                    <item row="3" column="1">
+                                        <widget class="QLineEdit" name="lineEdit_sweepWave_phase" />
+                                    </item>
+                                    <item row="0" column="1">
+                                        <widget class="QLineEdit"
+                                            name="lineEdit_sweepWave_amplitude" />
+                                    </item>
+                                    <item row="3" column="0">
+                                        <widget class="QLabel" name="label_sweepWave_phase">
+                                            <property name="text">
+                                                <string>Phase</string>
+                                            </property>
+                                        </widget>
+                                    </item>
+                                    <item row="5" column="1">
+                                        <widget class="QLineEdit"
+                                            name="lineEdit_sweepWave_sampleRate" />
+                                    </item>
+                                    <item row="1" column="1">
+                                        <widget class="QLineEdit"
+                                            name="lineEdit_sweepWave_startFrequency" />
+                                    </item>
+                                    <item row="5" column="0">
+                                        <widget class="QLabel" name="label_sweepWave_sampleRate">
+                                            <property name="text">
+                                                <string>SampleRate</string>
+                                            </property>
+                                        </widget>
+                                    </item>
+                                    <item row="2" column="1">
+                                        <widget class="QLineEdit"
+                                            name="lineEdit_sweepWave_endFrequency" />
+                                    </item>
+                                    <item row="2" column="0">
+                                        <widget class="QLabel" name="label_sweepWave_endFrequency">
+                                            <property name="text">
+                                                <string>EndFrequency</string>
+                                            </property>
+                                        </widget>
+                                    </item>
+                                </layout>
+                            </widget>
+                        </widget>
+                    </widget>
                 </widget>
             </widget>
         </widget>
-        <widget class="QMenuBar" name="menubar">
-            <property name="geometry">
-                <rect>
-                    <x>0</x>
-                    <y>0</y>
-                    <width>800</width>
-                    <height>20</height>
-                </rect>
-            </property>
-        </widget>
-        <widget class="QStatusBar" name="statusbar" />
     </widget>
     <resources />
     <connections />

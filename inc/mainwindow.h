@@ -1,43 +1,56 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "Fsa.h"
-#include "communicate.h"
 #include "control.h"
+#include "dataGenerater.h"
 #include "ui_mainwindow.h"
 #include <QMainWindow>
 #include <QTimer>
+#include <map>
+#include <qhostaddress.h>
+#include <string>
 #include <vector>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
-class MainWindow;
+class FSA_Tool;
 }
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow {
+class FSA_Tool : public QMainWindow {
     Q_OBJECT
 
 public:
-    MainWindow( QWidget* parent = nullptr );
-    ~MainWindow();
-    Ui::MainWindow                  ui;
-    QTimer                          timer;
-    Communicate                     communicate;
-    Control                         control;
-    QList< QHostAddress >           ipList;
-    std::vector< FSA_CONNECT::FSA > fsaList;
+    FSA_Tool( QWidget* parent = nullptr );
+    ~FSA_Tool();
 
-    Communicate::ControlMode controlMode;
-    Control::FunctionMode    functionMode;
+    Ui::FSA_Tool  ui;
+    QTimer        timer;
+    Control       control;
+    DataGenerater dataGenerater;
+
+    QMap< QString, FSA_CONNECT::FSA > fsaMap;
+
+    Control::ControlMode        controlMode{ Control::ControlMode::POSITION };
+    DataGenerater::FunctionMode functionMode{ DataGenerater::FunctionMode::SineWave };
 
 private:
     void setupUI();
     void init();
     void updateUI();
 
+    void setControlDataVariable( std::map< DataGenerater::ControlDataVariable, double >& controlDataVariable );
+
+    void test();
+    void plotVector( const std::vector< double >& data );
+
 private slots:
-    void on_comboBox_controlMode_textActivated( const QString& currentControlMode );
-    void on_comboBox_functionMode_textActivated( const QString& currentFunctionMode );
+    const QString on_comboBox_fsaList_textActivated( const QString& currentIP );
+    void          on_comboBox_controlMode_textActivated( const QString& currentControlMode );
+    void          on_comboBox_functionMode_textActivated( const QString& currentFunctionMode );
+
+    void on_pushButton_enableFSA_clicked();
+    void on_pushButton_setControllMode_clicked();
+    void on_pushButton_setFunctionMode_clicked();
 };
 #endif  // MAINWINDOW_H

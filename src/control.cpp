@@ -1,47 +1,126 @@
 #include "control.h"
-#include <cstdint>
+#include "Fsa.h"
+#include "mainwindow.h"
 #include <iostream>
-#include <math.h>
+#include <qhostaddress.h>
+#include <qmap.h>
 #include <vector>
 
-std::vector< float > Control::setControlData( const FunctionMode& functionMode ) {
-    switch ( functionMode ) {
-    case FunctionMode::SineWave:
-        return generateSineWaveData( 10, 2, 0, 1000, 1000 );
+void Control::broadcast( const QString& message, const QHostAddress& address, const quint16 port, QMap< QString, FSA_CONNECT::FSA > fsaMap ) {
+    QUdpSocket udpSocket;
+    QByteArray datagram = message.toUtf8();
+
+    // UDP 广播
+    udpSocket.writeDatagram( datagram, address, port );
+    // 如果接收到回复，将回复者的IP地址添加到列表中
+    if ( udpSocket.waitForReadyRead( 100 ) && udpSocket.hasPendingDatagrams() ) {
+        datagram.resize( udpSocket.pendingDatagramSize() );
+        QHostAddress senderIP;
+        quint16      senderPort;
+
+        udpSocket.readDatagram( datagram.data(), datagram.size(), &senderIP, &senderPort );
+
+        fsaMap.insert( senderIP.toString(), FSA_CONNECT::FSA() );
+        fsaMap.find( senderIP.toString() )->init( senderIP.toString().toStdString() );
+    }
+}
+
+int Control::enableFSA( FSA_CONNECT::FSA& fsa ) {
+    fsa.Enable();
+    return 0;
+}
+
+int Control::setControlMode( const ControlMode& controlMode, FSA_CONNECT::FSA& fsa ) {
+    switch ( controlMode ) {
+    case ControlMode::POSITION:
+        fsa.EnablePosControl();
         break;
-    case FunctionMode::BandWidth:
-        return generateSweepWaveData( 10, 1, 10, 0, 1000, 1000 );
+    case ControlMode::VELOCITY:
+        fsa.EnableVelControl();
+        break;
+    case ControlMode::CURRENT:
+        fsa.EnableCurControl();
+        break;
+    case ControlMode::PD:
+        fsa.EnablePDControl();
         break;
     default:
-        return std::vector< float >();
+        throw std::runtime_error( "Unknown Control Mode" );
+        break;
     }
+    return 0;
 }
 
-std::vector< float > Control::generateSineWaveData( float amplitude, float frequency, float phase, float duration, float sampleRate ) {
-    // std::cout << "Amplitude: " << amplitude << std::endl;
-    // std::cout << "Frequency: " << frequency << std::endl;
-    // std::cout << "Phase: " << phase << std::endl;
+void Control::sendControlData( const ControlMode& controlMode, ControlData_t& controlData, FSA_CONNECT::FSA& fsa, const float& controlPeriod ) {
+    std::vector< double > pos;
+    std::vector< double > vel;
+    std::vector< double > cur;
 
-    int                  sampleCount = static_cast< int >( duration * sampleRate );
-    std::vector< float > data( sampleCount );
-
-    for ( int i = 0; i < sampleCount; ++i ) {
-        float time = i / sampleRate;
-        data[ i ]  = amplitude * std::sin( 2 * M_PI * frequency * time + phase );
+    switch ( controlMode ) {
+    case ControlMode::POSITION:
+        pos = controlData.at( ControlMode::POSITION ).at( "POSITION" );
+        vel = controlData.at( ControlMode::POSITION ).at( "VELOCITY" );
+        cur = controlData.at( ControlMode::POSITION ).at( "CURRENT" );
+        break;
+    case ControlMode::VELOCITY:
+        vel = controlData.at( ControlMode::VELOCITY ).at( "VELOCITY" );
+        cur = controlData.at( ControlMode::VELOCITY ).at( "CURRENT" );
+        break;
+    case ControlMode::CURRENT:
+        cur = controlData.at( ControlMode::CURRENT ).at( "CURRENT" );
+        break;
+    case ControlMode::PD:
+        pos = controlData.at( ControlMode::PD ).at( "POSITION" );
+        vel = controlData.at( ControlMode::PD ).at( "VELOCITY" );
+        cur = controlData.at( ControlMode::PD ).at( "CURRENT" );
+        break;
+    default:
+        throw std::runtime_error( "Unknown Control Mode" );
+        break;
     }
 
-    return data;
-}
+    struct timespec ts;
+    struct timespec now;
 
-std::vector< float > Control::generateSweepWaveData( float amplitude, float startFrequency, float endFrequency, float phase, float duration, float sampleRate ) {
-    int                  sampleCount = static_cast< int >( duration * sampleRate );
-    std::vector< float > data( sampleCount );
+    for ( int i = 0; i < pos.size(); i++ ) {
 
-    for ( int i = 0; i < sampleCount; ++i ) {
-        float time      = i / sampleRate;
-        float frequency = startFrequency + ( endFrequency - startFrequency ) * ( time / duration );
-        data[ i ]       = amplitude * std::sin( 2 * M_PI * frequency * time + phase );
+        ts.tv_sec  = static_cast< time_t >( controlPeriod );
+        ts.tv_nsec = static_cast< long long >( ( controlPeriod - ts.tv_sec ) * 1e9 );
+
+        clock_gettime( CLOCK_MONOTONIC, &now );
+
+        struct timespec nextPeriod = { now.tv_sec + ts.tv_sec, now.tv_nsec + ts.tv_nsec };
+        while ( nextPeriod.tv_nsec >= 1000000000 ) {
+            nextPeriod.tv_sec++;
+            nextPeriod.tv_nsec -= 1000000000;
+        }
+
+        auto start = std::chrono::high_resolution_clock::now();
+
+        // 发送数据
+        switch ( controlMode ) {
+        case ControlMode::POSITION:
+            fsa.SetPosition( pos.at( i ), vel.at( i ), cur.at( 1 ) );
+            break;
+        case ControlMode::VELOCITY:
+            fsa.SetVelocity( vel.at( i ), cur.at( i ) );
+            break;
+        case ControlMode::CURRENT:
+            fsa.SetCurrent( cur.at( i ) );
+            break;
+        case ControlMode::PD:
+            fsa.SetPosition( pos.at( i ), vel.at( i ), cur.at( i ) );
+            break;
+        default:
+            throw std::runtime_error( "Unknown Control Mode" );
+            break;
+        }
+
+        clock_nanosleep( CLOCK_MONOTONIC, TIMER_ABSTIME, &nextPeriod, NULL );
+
+        auto                            end     = std::chrono::high_resolution_clock::now();
+        std::chrono::duration< double > elapsed = end - start;
+
+        std::cout << "Elapsed time: " << elapsed.count() << " s\n";
     }
-
-    return data;
 }
