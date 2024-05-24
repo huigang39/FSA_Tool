@@ -20,7 +20,7 @@ QT_END_NAMESPACE
 class ControlWorker : public QObject {
     Q_OBJECT
 public:
-    ControlWorker()  = default;
+    ControlWorker() : hasRun( false ){};
     ~ControlWorker() = default;
 
 private:
