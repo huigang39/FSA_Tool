@@ -71,7 +71,7 @@ public:
     int  enableFSA( FSA_CONNECT::FSA& fsa );
     int  setPidParamter( FSA_CONNECT::FSAConfig::FSAPIDParams& pidParameter, FSA_CONNECT::FSA& fsa );
     int  setControlMode( const FSA_CONNECT::Status::FSAModeOfOperation& controlMode, FSA_CONNECT::FSA& fsa );
-    void sendControlData( const FSA_CONNECT::Status::FSAModeOfOperation& controlMode, ControlData_t& controlData, FSA_CONNECT::FSA& fsa, const float& controlPeriod );
+    void sendControlData( const FSA_CONNECT::Status::FSAModeOfOperation& controlMode, ControlData_t& controlData, FSA_CONNECT::FSA& fsa, const double& controlPeriod );
 };
 
 #endif  // COMMUNICATE_H

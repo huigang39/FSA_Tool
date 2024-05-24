@@ -2,7 +2,9 @@
 #include "Fsa.h"
 #include "control.h"
 #include "dataGenerater.h"
+#include "ui_mainwindow.h"
 #include <iostream>
+#include <qobjectdefs.h>
 #include <qtimer.h>
 #include <string>
 #include <sys/socket.h>
@@ -19,14 +21,6 @@ void FSA_Tool::init() {
     static QMap< QString, FSA_CONNECT::FSA > lastFsaMap = fsaMap;
     connect( &boardcastTimer, &QTimer::timeout, [ & ]() {
         control.broadcast( "Is any fourier smart server here?", QHostAddress( "192.168.137.255" ), 2334, fsaMap );
-
-        for ( auto& ip : fsaMap.keys() ) {
-            std::cout << "IP: " << ip.toStdString() << std::endl;
-        }
-
-        for ( auto& ip : lastFsaMap.keys() ) {
-            std::cout << "lastIP: " << ip.toStdString() << std::endl;
-        }
 
         if ( lastFsaMap.keys() != fsaMap.keys() ) {
             lastFsaMap = fsaMap;
@@ -46,9 +40,13 @@ void FSA_Tool::init() {
 
     boardcastTimer.moveToThread( &uiUpdateThread );
     getPvcTimer.moveToThread( &uiUpdateThread );
+    controlWorker.moveToThread( &dataSendThread );
 
     connect( &uiUpdateThread, &QThread::started, [ & ]() { boardcastTimer.start( 3000 ); } );
     connect( &uiUpdateThread, &QThread::started, [ & ]() { getPvcTimer.start( 500 ); } );
+    connect( &dataSendThread, &QThread::started, [ & ]() {
+        controlWorker.dataSendThreadStart( control, controlMode, control.controlData, fsaMap.find( on_comboBox_fsaList_textActivated( ui.comboBox_fsaList->currentText() ) ).value(), 0.002 );
+    } );
 
     uiUpdateThread.start();
 }
@@ -164,8 +162,7 @@ void FSA_Tool::on_pushButton_setFunctionMode_clicked() {
             throw std::runtime_error( "Unknown Control Mode" );
             break;
         }
-
-        control.sendControlData( controlMode, control.controlData, fsaMap.find( on_comboBox_fsaList_textActivated( ui.comboBox_fsaList->currentText() ) ).value(), 0.002 );
+        dataSendThread.start();
     }
 }
 

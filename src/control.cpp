@@ -6,6 +6,7 @@
 #include <iostream>
 #include <qhostaddress.h>
 #include <qmap.h>
+#include <qthread.h>
 #include <vector>
 
 void Control::broadcast( const QString& message, const QHostAddress& address, const quint16 port, QMap< QString, FSA_CONNECT::FSA >& fsaMap ) {
@@ -71,7 +72,7 @@ int Control::setControlMode( const FSA_CONNECT::Status::FSAModeOfOperation& cont
     return 0;
 }
 
-void Control::sendControlData( const FSA_CONNECT::Status::FSAModeOfOperation& controlMode, ControlData_t& controlData, FSA_CONNECT::FSA& fsa, const float& controlPeriod ) {
+void Control::sendControlData( const FSA_CONNECT::Status::FSAModeOfOperation& controlMode, ControlData_t& controlData, FSA_CONNECT::FSA& fsa, const double& controlPeriod ) {
     std::vector< double > pos;
     std::vector< double > vel;
     std::vector< double > cur;

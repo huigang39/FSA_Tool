@@ -17,6 +17,25 @@ class FSA_Tool;
 }
 QT_END_NAMESPACE
 
+class ControlWorker : public QObject {
+    Q_OBJECT
+public:
+    ControlWorker()  = default;
+    ~ControlWorker() = default;
+
+private:
+    bool hasRun;
+
+public slots:
+    void dataSendThreadStart( Control& control, const FSA_CONNECT::Status::FSAModeOfOperation& controlMode, Control::ControlData_t& controlData, FSA_CONNECT::FSA& fsa, const double& controlPeriod ) {
+        if ( hasRun ) {
+            return;
+        }
+        control.sendControlData( controlMode, controlData, fsa, controlPeriod );
+        hasRun = true;
+    };
+};
+
 class FSA_Tool : public QMainWindow {
     Q_OBJECT
 
@@ -26,10 +45,13 @@ public:
 
     Ui::FSA_Tool  ui;
     QThread       uiUpdateThread;
+    QThread       dataSendThread;
     QTimer        boardcastTimer;
     QTimer        getPvcTimer;
     Control       control;
     DataGenerater dataGenerater;
+
+    ControlWorker controlWorker;
 
     QMap< QString, FSA_CONNECT::FSA > fsaMap;
 
@@ -57,4 +79,5 @@ private slots:
     void on_pushButton_setFunctionMode_clicked();
     void on_pushButton_setPidParamter_clicked();
 };
+
 #endif  // MAINWINDOW_H
