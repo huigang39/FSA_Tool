@@ -8,6 +8,7 @@
 #include <QThread>
 #include <QTimer>
 #include <map>
+#include <qtmetamacros.h>
 #include <string>
 #include <vector>
 
@@ -20,19 +21,12 @@ QT_END_NAMESPACE
 class ControlWorker : public QObject {
     Q_OBJECT
 public:
-    ControlWorker() : hasRun( false ){};
+    ControlWorker()  = default;
     ~ControlWorker() = default;
 
-private:
-    bool hasRun;
-
 public slots:
-    void dataSendThreadStart( Control& control, const FSA_CONNECT::Status::FSAModeOfOperation& controlMode, Control::ControlData_t& controlData, FSA_CONNECT::FSA& fsa, const double& controlPeriod ) {
-        if ( hasRun ) {
-            return;
-        }
+    void dataSendThread( Control& control, const FSA_CONNECT::Status::FSAModeOfOperation& controlMode, Control::ControlData_t& controlData, FSA_CONNECT::FSA& fsa, const double& controlPeriod ) {
         control.sendControlData( controlMode, controlData, fsa, controlPeriod );
-        hasRun = true;
     };
 };
 
@@ -78,6 +72,9 @@ private slots:
     void on_pushButton_setControlMode_clicked();
     void on_pushButton_setFunctionMode_clicked();
     void on_pushButton_setPidParamter_clicked();
+
+signals:
+    void dataSendThreadStart();
 };
 
 #endif  // MAINWINDOW_H

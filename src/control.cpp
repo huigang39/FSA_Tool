@@ -126,16 +126,36 @@ void Control::sendControlData( const FSA_CONNECT::Status::FSAModeOfOperation& co
         // 发送数据
         switch ( controlMode ) {
         case FSA_CONNECT::Status::FSAModeOfOperation::POSITION_CONTROL:
-            fsa.SetPosition( pos.at( i ), vel.at( i ), cur.at( 1 ) );
+            try {
+                fsa.SetPosition( pos.at( i ), vel.at( i ), cur.at( 1 ) );
+            }
+            catch ( const std::exception& e ) {
+                std::cerr << e.what() << '\n';
+            }
             break;
         case FSA_CONNECT::Status::FSAModeOfOperation::VELOCITY_CONTROL:
-            fsa.SetVelocity( vel.at( i ), cur.at( i ) );
+            try {
+                fsa.SetVelocity( vel.at( i ), cur.at( i ) );
+            }
+            catch ( const std::exception& e ) {
+                std::cerr << e.what() << '\n';
+            }
             break;
         case FSA_CONNECT::Status::FSAModeOfOperation::CURRENT_CLOSE_LOOP_CONTROL:
-            fsa.SetCurrent( cur.at( i ) );
+            try {
+                fsa.SetCurrent( cur.at( i ) );
+            }
+            catch ( const std::exception& e ) {
+                std::cerr << e.what() << '\n';
+            }
             break;
         case FSA_CONNECT::Status::FSAModeOfOperation::PD_CONTROL:
-            fsa.SetPosition( pos.at( i ), vel.at( i ), cur.at( i ) );
+            try {
+                fsa.SetPosition( pos.at( i ), vel.at( i ), cur.at( i ) );
+            }
+            catch ( const std::exception& e ) {
+                std::cerr << e.what() << '\n';
+            }
             break;
         default:
             throw std::runtime_error( "Unknown Control Mode" );

@@ -44,11 +44,12 @@ void FSA_Tool::init() {
 
     connect( &uiUpdateThread, &QThread::started, [ & ]() { boardcastTimer.start( 3000 ); } );
     connect( &uiUpdateThread, &QThread::started, [ & ]() { getPvcTimer.start( 500 ); } );
-    connect( &dataSendThread, &QThread::started, [ & ]() {
-        controlWorker.dataSendThreadStart( control, controlMode, control.controlData, fsaMap.find( on_comboBox_fsaList_textActivated( ui.comboBox_fsaList->currentText() ) ).value(), 0.002 );
+    connect( this, &FSA_Tool::dataSendThreadStart, [ & ]() {
+        controlWorker.dataSendThread( control, controlMode, control.controlData, fsaMap.find( on_comboBox_fsaList_textActivated( ui.comboBox_fsaList->currentText() ) ).value(), 0.002 );
     } );
 
     uiUpdateThread.start();
+    dataSendThread.start();
 }
 
 void FSA_Tool::setupUI() {
@@ -162,7 +163,7 @@ void FSA_Tool::on_pushButton_setFunctionMode_clicked() {
             throw std::runtime_error( "Unknown Control Mode" );
             break;
         }
-        dataSendThread.start();
+        emit dataSendThreadStart();
     }
 }
 
