@@ -73,10 +73,10 @@ int Control::setControlMode( const FSA_CONNECT::Status::FSAModeOfOperation& cont
 }
 
 void Control::sendControlData( const FSA_CONNECT::Status::FSAModeOfOperation& controlMode, ControlData_t& controlData, FSA_CONNECT::FSA& fsa, const double& controlPeriod ) {
-    std::vector< double > pos;
-    std::vector< double > vel;
-    std::vector< double > cur;
-    int                   size;
+    std::vector< double > pos{};
+    std::vector< double > vel{};
+    std::vector< double > cur{};
+    int                   size{};
 
     switch ( controlMode ) {
     case FSA_CONNECT::Status::FSAModeOfOperation::POSITION_CONTROL:
@@ -105,8 +105,8 @@ void Control::sendControlData( const FSA_CONNECT::Status::FSAModeOfOperation& co
         break;
     }
 
-    struct timespec ts;
-    struct timespec now;
+    struct timespec ts {};
+    struct timespec now {};
 
     for ( int i = 0; i < size; i++ ) {
 
@@ -167,6 +167,7 @@ void Control::sendControlData( const FSA_CONNECT::Status::FSAModeOfOperation& co
         auto                            end     = std::chrono::high_resolution_clock::now();
         std::chrono::duration< double > elapsed = end - start;
 
+        std::cout << "Position: " << pos.at( i ) << " Velocity: " << vel.at( i ) << " Current: " << cur.at( i ) << std::endl;
         std::cout << "Elapsed time: " << elapsed.count() << " s\n";
     }
 }

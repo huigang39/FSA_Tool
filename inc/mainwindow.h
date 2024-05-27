@@ -25,7 +25,7 @@ public:
     ~ControlWorker() = default;
 
 public slots:
-    void dataSendThread( Control& control, const FSA_CONNECT::Status::FSAModeOfOperation& controlMode, Control::ControlData_t& controlData, FSA_CONNECT::FSA& fsa, const double& controlPeriod ) {
+    void sendControlData( Control& control, const FSA_CONNECT::Status::FSAModeOfOperation& controlMode, Control::ControlData_t& controlData, FSA_CONNECT::FSA& fsa, const double& controlPeriod ) {
         control.sendControlData( controlMode, controlData, fsa, controlPeriod );
     };
 };
@@ -74,7 +74,7 @@ private slots:
     void on_pushButton_setPidParamter_clicked();
 
 signals:
-    void dataSendThreadStart();
+    void dataSendThreadStart( Control& control, const FSA_CONNECT::Status::FSAModeOfOperation& controlMode, Control::ControlData_t& controlData, FSA_CONNECT::FSA& fsa, const double& controlPeriod );
 };
 
 #endif  // MAINWINDOW_H

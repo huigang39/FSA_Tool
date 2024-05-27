@@ -4,10 +4,8 @@
 #include "dataGenerater.h"
 #include "ui_mainwindow.h"
 #include <iostream>
-#include <qobjectdefs.h>
 #include <qtimer.h>
 #include <string>
-#include <sys/socket.h>
 #include <vector>
 
 FSA_Tool::FSA_Tool( QWidget* parent ) : QMainWindow( parent ) {
@@ -15,11 +13,13 @@ FSA_Tool::FSA_Tool( QWidget* parent ) : QMainWindow( parent ) {
     setupUI();
 }
 
-FSA_Tool::~FSA_Tool() = default;
+FSA_Tool::~FSA_Tool(){
+
+};
 
 void FSA_Tool::init() {
-    static QMap< QString, FSA_CONNECT::FSA > lastFsaMap = fsaMap;
     connect( &boardcastTimer, &QTimer::timeout, [ & ]() {
+        static QMap< QString, FSA_CONNECT::FSA > lastFsaMap = fsaMap;
         control.broadcast( "Is any fourier smart server here?", QHostAddress( "192.168.137.255" ), 2334, fsaMap );
 
         if ( lastFsaMap.keys() != fsaMap.keys() ) {
@@ -29,6 +29,10 @@ void FSA_Tool::init() {
     } );
 
     connect( &getPvcTimer, &QTimer::timeout, [ & ]() {
+        static int i = 0;
+        ui.lcdNumber_position->display( i++ );
+        std::cout << i << std::endl;
+
         for ( auto& fsa : fsaMap ) {
             fsa.GetPVC( control.pvcNow.at( FSA_CONNECT::Status::FSAModeOfOperation::POSITION_CONTROL ), control.pvcNow.at( FSA_CONNECT::Status::FSAModeOfOperation::VELOCITY_CONTROL ),
                         control.pvcNow.at( FSA_CONNECT::Status::FSAModeOfOperation::CURRENT_CLOSE_LOOP_CONTROL ) );
@@ -38,15 +42,17 @@ void FSA_Tool::init() {
         }
     } );
 
+    connect( this, &FSA_Tool::dataSendThreadStart, &controlWorker, &ControlWorker::sendControlData );
+
     boardcastTimer.moveToThread( &uiUpdateThread );
     getPvcTimer.moveToThread( &uiUpdateThread );
     controlWorker.moveToThread( &dataSendThread );
 
-    connect( &uiUpdateThread, &QThread::started, [ & ]() { boardcastTimer.start( 3000 ); } );
-    connect( &uiUpdateThread, &QThread::started, [ & ]() { getPvcTimer.start( 500 ); } );
-    connect( this, &FSA_Tool::dataSendThreadStart, [ & ]() {
-        controlWorker.dataSendThread( control, controlMode, control.controlData, fsaMap.find( on_comboBox_fsaList_textActivated( ui.comboBox_fsaList->currentText() ) ).value(), 0.002 );
+    connect( &uiUpdateThread, &QThread::started, [ & ]() {
+        boardcastTimer.start( 1000 );
+        getPvcTimer.start( 100 );
     } );
+    connect( &dataSendThread, &QThread::started, [ & ]() {} );
 
     uiUpdateThread.start();
     dataSendThread.start();
@@ -111,7 +117,6 @@ void FSA_Tool::on_pushButton_setControlMode_clicked() {
 }
 
 void FSA_Tool::on_pushButton_setFunctionMode_clicked() {
-    // test();
     if ( !ui.comboBox_fsaList->currentText().isEmpty() ) {
         setControlDataVariable( dataGenerater.controlDataVariable );
 
@@ -121,9 +126,9 @@ void FSA_Tool::on_pushButton_setFunctionMode_clicked() {
             }
         }
 
-        std::vector< double > pos;
-        std::vector< double > vel;
-        std::vector< double > cur;
+        std::vector< double > pos{};
+        std::vector< double > vel{};
+        std::vector< double > cur{};
 
         switch ( controlMode ) {
         case FSA_CONNECT::Status::FSAModeOfOperation::POSITION_CONTROL:
@@ -163,7 +168,7 @@ void FSA_Tool::on_pushButton_setFunctionMode_clicked() {
             throw std::runtime_error( "Unknown Control Mode" );
             break;
         }
-        emit dataSendThreadStart();
+        emit dataSendThreadStart( control, controlMode, control.controlData, fsaMap.find( on_comboBox_fsaList_textActivated( ui.comboBox_fsaList->currentText() ) ).value(), 0.002 );
     }
 }
 
