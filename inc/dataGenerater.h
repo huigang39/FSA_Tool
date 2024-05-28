@@ -65,8 +65,8 @@ public:
     std::vector< double > generateControlData( const FunctionMode& functionMode, std::map< ControlDataVariable, double >& controlData );
 
 private:
-    std::vector< double > generateSineWaveData( double amplitude, double frequency, double phase, double duration, double sampleRate );
-    std::vector< double > generateSweepWaveData( double amplitude, double startFrequency, double endFrequency, double phase, double duration, double sampleRate );
+    std::vector< double > generateSineWaveData( const double amplitude, const double frequency, const double phase, const double duration, const double sampleRate );
+    std::vector< double > generateSweepWaveData( const double amplitude, const double startFrequency, const double endFrequency, const double phase, const double duration, const double sampleRate );
 };
 
 #endif  // CONTROL_H

@@ -34,13 +34,29 @@ void Control::broadcast( const QString& message, const QHostAddress& address, co
     }
 }
 
-int Control::enableFSA( FSA_CONNECT::FSA& fsa ) {
-    fsa.Enable();
+int Control::setPidParamter( FSA_CONNECT::FSAConfig::FSAPIDParams& pidParameter, FSA_CONNECT::FSA& fsa ) {
+    fsa.SetPIDParams( pidParameter );
     return 0;
 }
 
-int Control::setPidParamter( FSA_CONNECT::FSAConfig::FSAPIDParams& pidParameter, FSA_CONNECT::FSA& fsa ) {
-    fsa.SetPIDParams( pidParameter );
+int Control::setControlWord( const FSA_CONNECT::Status::FSAControlWord& controlWord, FSA_CONNECT::FSA& fsa ) {
+    switch ( controlWord ) {
+    case FSA_CONNECT::Status::FSAControlWord::SERVO_OFF:
+        fsa.Disable();
+        break;
+    case FSA_CONNECT::Status::FSAControlWord::SERVO_ON:
+        fsa.Enable();
+        break;
+    case FSA_CONNECT::Status::FSAControlWord::CALIBRATE_MOTOR:
+        break;
+    case FSA_CONNECT::Status::FSAControlWord::CALIBRATE_ADC:
+        break;
+    case FSA_CONNECT::Status::FSAControlWord::CLEAR_FAULT:
+        break;
+    default:
+        throw std::runtime_error( "Unknown Control Word" );
+        break;
+    }
     return 0;
 }
 

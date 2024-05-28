@@ -16,6 +16,14 @@ public:
     Control()  = default;
     ~Control() = default;
 
+    const std::map< const std::string, const FSA_CONNECT::Status::FSAControlWord > controlWordMap{
+        { "Enable", FSA_CONNECT::Status::FSAControlWord::SERVO_ON },
+        { "Disable", FSA_CONNECT::Status::FSAControlWord::SERVO_OFF },
+        { "Calibrate Motor", FSA_CONNECT::Status::FSAControlWord::CALIBRATE_MOTOR },
+        { "Calibrate ADC", FSA_CONNECT::Status::FSAControlWord::CALIBRATE_ADC },
+        { "Clear Fault", FSA_CONNECT::Status::FSAControlWord::CLEAR_FAULT },
+    };
+
     const std::map< const std::string, const FSA_CONNECT::Status::FSAModeOfOperation > controlModeMap{
         { "POSITION", FSA_CONNECT::Status::FSAModeOfOperation::POSITION_CONTROL },
         { "VELOCITY", FSA_CONNECT::Status::FSAModeOfOperation::VELOCITY_CONTROL },
@@ -68,8 +76,8 @@ public:
     FSA_CONNECT::FSAConfig::FSAPIDParams pidParameter;
 
     void broadcast( const QString& message, const QHostAddress& address, const quint16 port, QMap< QString, FSA_CONNECT::FSA >& fsaMap );
-    int  enableFSA( FSA_CONNECT::FSA& fsa );
     int  setPidParamter( FSA_CONNECT::FSAConfig::FSAPIDParams& pidParameter, FSA_CONNECT::FSA& fsa );
+    int  setControlWord( const FSA_CONNECT::Status::FSAControlWord& controlWord, FSA_CONNECT::FSA& fsa );
     int  setControlMode( const FSA_CONNECT::Status::FSAModeOfOperation& controlMode, FSA_CONNECT::FSA& fsa );
     void sendControlData( const FSA_CONNECT::Status::FSAModeOfOperation& controlMode, ControlData_t& controlData, FSA_CONNECT::FSA& fsa, const double& controlPeriod );
 };

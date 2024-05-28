@@ -29,10 +29,6 @@ void FSA_Tool::init() {
     } );
 
     connect( &getPvcTimer, &QTimer::timeout, [ & ]() {
-        static int i = 0;
-        ui.lcdNumber_position->display( i++ );
-        std::cout << i << std::endl;
-
         for ( auto& fsa : fsaMap ) {
             fsa.GetPVC( control.pvcNow.at( FSA_CONNECT::Status::FSAModeOfOperation::POSITION_CONTROL ), control.pvcNow.at( FSA_CONNECT::Status::FSAModeOfOperation::VELOCITY_CONTROL ),
                         control.pvcNow.at( FSA_CONNECT::Status::FSAModeOfOperation::CURRENT_CLOSE_LOOP_CONTROL ) );
@@ -64,14 +60,24 @@ void FSA_Tool::setupUI() {
 }
 
 void FSA_Tool::updateUI() {
-    ui.comboBox_fsaList->clear();
+    ui.comboBox_ipList->clear();
     for ( auto& ip : fsaMap.keys() ) {
-        ui.comboBox_fsaList->addItem( ip );
+        ui.comboBox_ipList->addItem( ip );
     }
 }
 
-const QString FSA_Tool::on_comboBox_fsaList_textActivated( const QString& currentIP ) {
+const QString FSA_Tool::on_comboBox_ipList_textActivated( const QString& currentIP ) {
     return currentIP;
+}
+
+void FSA_Tool::on_comboBox_controlWord_textActivated( const QString& currentControlWord ) {
+    auto it = control.controlWordMap.find( currentControlWord.toStdString() );
+    if ( it != control.controlWordMap.end() ) {
+        controlWord = it->second;
+    }
+    else {
+        throw std::runtime_error( "Unknown Control Word" );
+    }
 }
 
 void FSA_Tool::on_comboBox_controlMode_textActivated( const QString& currentControlMode ) {
@@ -95,29 +101,28 @@ void FSA_Tool::on_comboBox_functionMode_textActivated( const QString& currentFun
     }
 }
 
-void FSA_Tool::on_pushButton_enableFSA_clicked() {
-    if ( !ui.comboBox_fsaList->currentText().isEmpty() ) {
-        fsaMap.find( on_comboBox_fsaList_textActivated( ui.comboBox_fsaList->currentText() ) ).value();
-        control.enableFSA( fsaMap.find( on_comboBox_fsaList_textActivated( ui.comboBox_fsaList->currentText() ) ).value() );
+void FSA_Tool::on_pushButton_setPidParamter_clicked() {
+    if ( !ui.comboBox_ipList->currentText().isEmpty() ) {
+        setPidParamter( control.pidParameter );
+
+        control.setPidParamter( control.pidParameter, fsaMap.find( on_comboBox_ipList_textActivated( ui.comboBox_ipList->currentText() ) ).value() );
     }
 }
 
-void FSA_Tool::on_pushButton_setPidParamter_clicked() {
-    if ( !ui.comboBox_fsaList->currentText().isEmpty() ) {
-        setPidParamter( control.pidParameter );
-
-        control.setPidParamter( control.pidParameter, fsaMap.find( on_comboBox_fsaList_textActivated( ui.comboBox_fsaList->currentText() ) ).value() );
+void FSA_Tool::on_pushButton_setControlWord_clicked() {
+    if ( !ui.comboBox_ipList->currentText().isEmpty() ) {
+        control.setControlWord( controlWord, fsaMap.find( on_comboBox_ipList_textActivated( ui.comboBox_ipList->currentText() ) ).value() );
     }
 }
 
 void FSA_Tool::on_pushButton_setControlMode_clicked() {
-    if ( !ui.comboBox_fsaList->currentText().isEmpty() ) {
-        control.setControlMode( controlMode, fsaMap.find( on_comboBox_fsaList_textActivated( ui.comboBox_fsaList->currentText() ) ).value() );
+    if ( !ui.comboBox_ipList->currentText().isEmpty() ) {
+        control.setControlMode( controlMode, fsaMap.find( on_comboBox_ipList_textActivated( ui.comboBox_ipList->currentText() ) ).value() );
     }
 }
 
 void FSA_Tool::on_pushButton_setFunctionMode_clicked() {
-    if ( !ui.comboBox_fsaList->currentText().isEmpty() ) {
+    if ( !ui.comboBox_ipList->currentText().isEmpty() ) {
         setControlDataVariable( dataGenerater.controlDataVariable );
 
         for ( auto& innerMap : control.controlData ) {
@@ -168,7 +173,7 @@ void FSA_Tool::on_pushButton_setFunctionMode_clicked() {
             throw std::runtime_error( "Unknown Control Mode" );
             break;
         }
-        emit dataSendThreadStart( control, controlMode, control.controlData, fsaMap.find( on_comboBox_fsaList_textActivated( ui.comboBox_fsaList->currentText() ) ).value(), 0.002 );
+        emit dataSendThreadStart( control, controlMode, control.controlData, fsaMap.find( on_comboBox_ipList_textActivated( ui.comboBox_ipList->currentText() ) ).value(), 0.002 );
     }
 }
 

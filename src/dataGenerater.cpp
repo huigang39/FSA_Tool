@@ -20,7 +20,7 @@ std::vector< double > DataGenerater::generateControlData( const FunctionMode& fu
     }
 }
 
-std::vector< double > DataGenerater::generateSineWaveData( double amplitude, double frequency, double phase, double duration, double sampleRate ) {
+std::vector< double > DataGenerater::generateSineWaveData( const double amplitude, const double frequency, const double phase, const double duration, const double sampleRate ) {
     // std::cout << "Amplitude: " << amplitude << std::endl;
     // std::cout << "Frequency: " << frequency << std::endl;
     // std::cout << "Phase: " << phase << std::endl;
@@ -36,7 +36,8 @@ std::vector< double > DataGenerater::generateSineWaveData( double amplitude, dou
     return data;
 }
 
-std::vector< double > DataGenerater::generateSweepWaveData( double amplitude, double startFrequency, double endFrequency, double phase, double duration, double sampleRate ) {
+std::vector< double > DataGenerater::generateSweepWaveData( const double amplitude, const double startFrequency, const double endFrequency, const double phase, const double duration,
+                                                            const double sampleRate ) {
     int                   sampleCount = static_cast< int >( duration * sampleRate );
     std::vector< double > data( sampleCount );
 

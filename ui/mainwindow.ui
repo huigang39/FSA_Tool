@@ -35,132 +35,29 @@
                     <attribute name="title">
                         <string>Control</string>
                     </attribute>
-                    <widget class="QComboBox" name="comboBox_controlMode">
-                        <property name="geometry">
-                            <rect>
-                                <x>10</x>
-                                <y>110</y>
-                                <width>131</width>
-                                <height>24</height>
-                            </rect>
-                        </property>
-                        <item>
-                            <property name="text">
-                                <string>POSITION</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>VELOCITY</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>CURRENT</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>PD</string>
-                            </property>
-                        </item>
-                    </widget>
-                    <widget class="QComboBox" name="comboBox_fsaList">
-                        <property name="geometry">
-                            <rect>
-                                <x>10</x>
-                                <y>70</y>
-                                <width>131</width>
-                                <height>23</height>
-                            </rect>
-                        </property>
-                    </widget>
-                    <widget class="QComboBox" name="comboBox_functionMode">
-                        <property name="geometry">
-                            <rect>
-                                <x>10</x>
-                                <y>150</y>
-                                <width>131</width>
-                                <height>23</height>
-                            </rect>
-                        </property>
-                        <item>
-                            <property name="text">
-                                <string>SineWave</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>BandWidth</string>
-                            </property>
-                        </item>
-                    </widget>
-                    <widget class="QPushButton" name="pushButton_setControlMode">
-                        <property name="geometry">
-                            <rect>
-                                <x>160</x>
-                                <y>110</y>
-                                <width>111</width>
-                                <height>23</height>
-                            </rect>
-                        </property>
-                        <property name="text">
-                            <string>SetControlMode</string>
-                        </property>
-                    </widget>
-                    <widget class="QPushButton" name="pushButton_setFunctionMode">
-                        <property name="geometry">
-                            <rect>
-                                <x>160</x>
-                                <y>150</y>
-                                <width>111</width>
-                                <height>23</height>
-                            </rect>
-                        </property>
-                        <property name="text">
-                            <string>SetFunctionMode</string>
-                        </property>
-                    </widget>
-                    <widget class="QPushButton" name="pushButton_enableFSA">
-                        <property name="geometry">
-                            <rect>
-                                <x>160</x>
-                                <y>70</y>
-                                <width>111</width>
-                                <height>23</height>
-                            </rect>
-                        </property>
-                        <property name="text">
-                            <string>Enable</string>
-                        </property>
-                    </widget>
                     <widget class="QStackedWidget" name="stackedWidget_configControlData">
                         <property name="geometry">
                             <rect>
-                                <x>20</x>
-                                <y>210</y>
+                                <x>10</x>
+                                <y>260</y>
                                 <width>251</width>
-                                <height>301</height>
+                                <height>241</height>
                             </rect>
                         </property>
                         <property name="currentIndex">
                             <number>0</number>
                         </property>
                         <widget class="QWidget" name="page_sineWave">
-                            <widget class="QWidget" name="gridLayoutWidget_sineWave">
+                            <widget class="QWidget" name="formLayoutWidget_2">
                                 <property name="geometry">
                                     <rect>
-                                        <x>20</x>
-                                        <y>40</y>
-                                        <width>201</width>
-                                        <height>231</height>
+                                        <x>40</x>
+                                        <y>70</y>
+                                        <width>160</width>
+                                        <height>141</height>
                                     </rect>
                                 </property>
-                                <layout class="QGridLayout"
-                                    name="gridLayout_sinwWave_sineWave_functionLayout">
-                                    <item row="2" column="1">
-                                        <widget class="QLineEdit" name="lineEdit_sinwWave_phase" />
-                                    </item>
+                                <layout class="QFormLayout" name="formLayout_sineWavePanel">
                                     <item row="0" column="0">
                                         <widget class="QLabel" name="label_sinwWave_amplitude">
                                             <property name="text">
@@ -171,22 +68,15 @@
                                     <item row="0" column="1">
                                         <widget class="QLineEdit" name="lineEdit_sinwWave_amplitude" />
                                     </item>
-                                    <item row="3" column="1">
-                                        <widget class="QLineEdit" name="lineEdit_sinwWave_duration" />
-                                    </item>
-                                    <item row="4" column="1">
-                                        <widget class="QLineEdit"
-                                            name="lineEdit_sinwWave_sampleRate" />
-                                    </item>
-                                    <item row="1" column="1">
-                                        <widget class="QLineEdit" name="lineEdit_sinwWave_frequency" />
-                                    </item>
                                     <item row="1" column="0">
                                         <widget class="QLabel" name="label_sinwWave_frequency">
                                             <property name="text">
                                                 <string>Frequency</string>
                                             </property>
                                         </widget>
+                                    </item>
+                                    <item row="1" column="1">
+                                        <widget class="QLineEdit" name="lineEdit_sinwWave_frequency" />
                                     </item>
                                     <item row="2" column="0">
                                         <widget class="QLabel" name="label_sinwWave_phase">
@@ -195,12 +85,18 @@
                                             </property>
                                         </widget>
                                     </item>
+                                    <item row="2" column="1">
+                                        <widget class="QLineEdit" name="lineEdit_sinwWave_phase" />
+                                    </item>
                                     <item row="3" column="0">
                                         <widget class="QLabel" name="label_sinwWave_duration">
                                             <property name="text">
                                                 <string>Duration</string>
                                             </property>
                                         </widget>
+                                    </item>
+                                    <item row="3" column="1">
+                                        <widget class="QLineEdit" name="lineEdit_sinwWave_duration" />
                                     </item>
                                     <item row="4" column="0">
                                         <widget class="QLabel" name="label_sinwWave_sampleRate">
@@ -209,30 +105,34 @@
                                             </property>
                                         </widget>
                                     </item>
+                                    <item row="4" column="1">
+                                        <widget class="QLineEdit"
+                                            name="lineEdit_sinwWave_sampleRate" />
+                                    </item>
                                 </layout>
                             </widget>
                         </widget>
                         <widget class="QWidget" name="page_sweepWave">
-                            <widget class="QWidget" name="gridLayoutWidget_sweepWave">
+                            <widget class="QWidget" name="formLayoutWidget_3">
                                 <property name="geometry">
                                     <rect>
-                                        <x>20</x>
-                                        <y>40</y>
-                                        <width>201</width>
-                                        <height>231</height>
+                                        <x>40</x>
+                                        <y>70</y>
+                                        <width>160</width>
+                                        <height>170</height>
                                     </rect>
                                 </property>
-                                <layout class="QGridLayout"
-                                    name="gridLayout_sweepWave_functionLayout">
-                                    <item row="4" column="1">
-                                        <widget class="QLineEdit" name="lineEdit_sweepWave_duration" />
-                                    </item>
-                                    <item row="4" column="0">
-                                        <widget class="QLabel" name="label_sweepWave_duration">
+                                <layout class="QFormLayout" name="formLayout_sweepWavePanel">
+                                    <item row="0" column="0">
+                                        <widget class="QLabel" name="label_sweepWave_amplitude">
                                             <property name="text">
-                                                <string>Duration</string>
+                                                <string>Amplitude</string>
                                             </property>
                                         </widget>
+                                    </item>
+                                    <item row="0" column="1">
+                                        <widget class="QLineEdit"
+                                            name="lineEdit_sweepWave_amplitude" />
                                     </item>
                                     <item row="1" column="0">
                                         <widget class="QLabel" name="label_sweepWave_startFrequency">
@@ -241,45 +141,9 @@
                                             </property>
                                         </widget>
                                     </item>
-                                    <item row="0" column="0">
-                                        <widget class="QLabel" name="label_sweepWave_amplitude">
-                                            <property name="text">
-                                                <string>Amplitude</string>
-                                            </property>
-                                        </widget>
-                                    </item>
-                                    <item row="3" column="1">
-                                        <widget class="QLineEdit" name="lineEdit_sweepWave_phase" />
-                                    </item>
-                                    <item row="0" column="1">
-                                        <widget class="QLineEdit"
-                                            name="lineEdit_sweepWave_amplitude" />
-                                    </item>
-                                    <item row="3" column="0">
-                                        <widget class="QLabel" name="label_sweepWave_phase">
-                                            <property name="text">
-                                                <string>Phase</string>
-                                            </property>
-                                        </widget>
-                                    </item>
-                                    <item row="5" column="1">
-                                        <widget class="QLineEdit"
-                                            name="lineEdit_sweepWave_sampleRate" />
-                                    </item>
                                     <item row="1" column="1">
                                         <widget class="QLineEdit"
                                             name="lineEdit_sweepWave_startFrequency" />
-                                    </item>
-                                    <item row="5" column="0">
-                                        <widget class="QLabel" name="label_sweepWave_sampleRate">
-                                            <property name="text">
-                                                <string>SampleRate</string>
-                                            </property>
-                                        </widget>
-                                    </item>
-                                    <item row="2" column="1">
-                                        <widget class="QLineEdit"
-                                            name="lineEdit_sweepWave_endFrequency" />
                                     </item>
                                     <item row="2" column="0">
                                         <widget class="QLabel" name="label_sweepWave_endFrequency">
@@ -288,78 +152,44 @@
                                             </property>
                                         </widget>
                                     </item>
+                                    <item row="2" column="1">
+                                        <widget class="QLineEdit"
+                                            name="lineEdit_sweepWave_endFrequency" />
+                                    </item>
+                                    <item row="3" column="0">
+                                        <widget class="QLabel" name="label_sweepWave_phase">
+                                            <property name="text">
+                                                <string>Phase</string>
+                                            </property>
+                                        </widget>
+                                    </item>
+                                    <item row="3" column="1">
+                                        <widget class="QLineEdit" name="lineEdit_sweepWave_phase" />
+                                    </item>
+                                    <item row="4" column="0">
+                                        <widget class="QLabel" name="label_sweepWave_duration">
+                                            <property name="text">
+                                                <string>Duration</string>
+                                            </property>
+                                        </widget>
+                                    </item>
+                                    <item row="4" column="1">
+                                        <widget class="QLineEdit" name="lineEdit_sweepWave_duration" />
+                                    </item>
+                                    <item row="5" column="0">
+                                        <widget class="QLabel" name="label_sweepWave_sampleRate">
+                                            <property name="text">
+                                                <string>SampleRate</string>
+                                            </property>
+                                        </widget>
+                                    </item>
+                                    <item row="5" column="1">
+                                        <widget class="QLineEdit"
+                                            name="lineEdit_sweepWave_sampleRate" />
+                                    </item>
                                 </layout>
                             </widget>
                         </widget>
-                    </widget>
-                    <widget class="QLCDNumber" name="lcdNumber_position">
-                        <property name="geometry">
-                            <rect>
-                                <x>703</x>
-                                <y>60</y>
-                                <width>81</width>
-                                <height>23</height>
-                            </rect>
-                        </property>
-                    </widget>
-                    <widget class="QLCDNumber" name="lcdNumber_velocity">
-                        <property name="geometry">
-                            <rect>
-                                <x>703</x>
-                                <y>100</y>
-                                <width>81</width>
-                                <height>23</height>
-                            </rect>
-                        </property>
-                    </widget>
-                    <widget class="QLCDNumber" name="lcdNumber_current">
-                        <property name="geometry">
-                            <rect>
-                                <x>703</x>
-                                <y>140</y>
-                                <width>81</width>
-                                <height>23</height>
-                            </rect>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" name="label_position">
-                        <property name="geometry">
-                            <rect>
-                                <x>630</x>
-                                <y>60</y>
-                                <width>57</width>
-                                <height>15</height>
-                            </rect>
-                        </property>
-                        <property name="text">
-                            <string>Position</string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" name="label_velocity">
-                        <property name="geometry">
-                            <rect>
-                                <x>630</x>
-                                <y>100</y>
-                                <width>57</width>
-                                <height>15</height>
-                            </rect>
-                        </property>
-                        <property name="text">
-                            <string>Velocity</string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" name="label_current">
-                        <property name="geometry">
-                            <rect>
-                                <x>630</x>
-                                <y>140</y>
-                                <width>57</width>
-                                <height>15</height>
-                            </rect>
-                        </property>
-                        <property name="text">
-                            <string>Current</string>
-                        </property>
                     </widget>
                     <widget class="QWidget" name="formLayoutWidget">
                         <property name="geometry">
@@ -370,7 +200,7 @@
                                 <height>151</height>
                             </rect>
                         </property>
-                        <layout class="QFormLayout" name="formLayout">
+                        <layout class="QFormLayout" name="formLayout_pidPanel">
                             <item row="0" column="0">
                                 <widget class="QLabel" name="label_position_Kp">
                                     <property name="text">
@@ -435,6 +265,154 @@
                         <property name="text">
                             <string>Set PID Paramter</string>
                         </property>
+                    </widget>
+                    <widget class="QWidget" name="formLayoutWidget_4">
+                        <property name="geometry">
+                            <rect>
+                                <x>630</x>
+                                <y>80</y>
+                                <width>160</width>
+                                <height>83</height>
+                            </rect>
+                        </property>
+                        <layout class="QFormLayout" name="formLayout_getPvcPanel">
+                            <item row="0" column="1">
+                                <widget class="QLCDNumber" name="lcdNumber_position" />
+                            </item>
+                            <item row="1" column="0">
+                                <widget class="QLabel" name="label_velocity">
+                                    <property name="text">
+                                        <string>Velocity</string>
+                                    </property>
+                                </widget>
+                            </item>
+                            <item row="1" column="1">
+                                <widget class="QLCDNumber" name="lcdNumber_velocity" />
+                            </item>
+                            <item row="2" column="0">
+                                <widget class="QLabel" name="label_current">
+                                    <property name="text">
+                                        <string>Current</string>
+                                    </property>
+                                </widget>
+                            </item>
+                            <item row="2" column="1">
+                                <widget class="QLCDNumber" name="lcdNumber_current" />
+                            </item>
+                            <item row="0" column="0">
+                                <widget class="QLabel" name="label_position">
+                                    <property name="text">
+                                        <string>Position</string>
+                                    </property>
+                                </widget>
+                            </item>
+                        </layout>
+                    </widget>
+                    <widget class="QWidget" name="formLayoutWidget_5">
+                        <property name="geometry">
+                            <rect>
+                                <x>20</x>
+                                <y>80</y>
+                                <width>261</width>
+                                <height>171</height>
+                            </rect>
+                        </property>
+                        <layout class="QFormLayout" name="formLayout_controlPanel">
+                            <item row="1" column="0">
+                                <widget class="QComboBox" name="comboBox_controlWord">
+                                    <item>
+                                        <property name="text">
+                                            <string>Disable</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Enable</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Calibrate Motor</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Calibrate ADC</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Clear Fault</string>
+                                        </property>
+                                    </item>
+                                </widget>
+                            </item>
+                            <item row="1" column="1">
+                                <widget class="QPushButton" name="pushButton_setControlWord">
+                                    <property name="text">
+                                        <string>Set Control Word</string>
+                                    </property>
+                                </widget>
+                            </item>
+                            <item row="2" column="0">
+                                <widget class="QComboBox" name="comboBox_controlMode">
+                                    <item>
+                                        <property name="text">
+                                            <string>POSITION</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>VELOCITY</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>CURRENT</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>PD</string>
+                                        </property>
+                                    </item>
+                                </widget>
+                            </item>
+                            <item row="2" column="1">
+                                <widget class="QPushButton" name="pushButton_setControlMode">
+                                    <property name="text">
+                                        <string>Set Control Mode</string>
+                                    </property>
+                                </widget>
+                            </item>
+                            <item row="3" column="0">
+                                <widget class="QComboBox" name="comboBox_functionMode">
+                                    <item>
+                                        <property name="text">
+                                            <string>SineWave</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>BandWidth</string>
+                                        </property>
+                                    </item>
+                                </widget>
+                            </item>
+                            <item row="3" column="1">
+                                <widget class="QPushButton" name="pushButton_setFunctionMode">
+                                    <property name="text">
+                                        <string>Set Function Mode</string>
+                                    </property>
+                                </widget>
+                            </item>
+                            <item row="0" column="0">
+                                <widget class="QComboBox" name="comboBox_ipList" />
+                            </item>
+                            <item row="0" column="1">
+                                <widget class="QComboBox" name="comboBox_usbList" />
+                            </item>
+                        </layout>
                     </widget>
                 </widget>
             </widget>
